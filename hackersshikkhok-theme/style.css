@@ -1,0 +1,124 @@
+/*
+Theme Name: HackersShikkhok 2040 Cyber & Coding Hub Theme
+Theme URI: https://hackersshikkhok.com
+Author: Developed by HackersShikkhok
+Author URI: https://hackersshikkhok.com
+Description: Permanent Modular Cyberpunk & Glassmorphism Theme for HackersShikkhok.com. Houses all UI, REST APIs, AI Engines, 2,024+ Client-Side Developer Tools, Cyber Academy LMS, Security SaaS, Technical SEO/AdSense, and Unified Settings natively inside the theme with lazy PSR-4 loading.
+Version: 5.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.2
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: hackersshikkhok-theme
+Tags: dark-mode, custom-colors, full-width-template, translation-ready, accessibility-ready, blog, e-commerce, entertainment
+*/
+
+:root {
+  --hs-bg-primary: #050811;
+  --hs-bg-secondary: #0b1120;
+  --hs-bg-card: rgba(11, 17, 32, 0.85);
+  --hs-neon-cyan: #00f5d4;
+  --hs-neon-red: #ff3366;
+  --hs-neon-purple: #7928ca;
+  --hs-neon-amber: #f59e0b;
+  --hs-text-primary: #f8fafc;
+  --hs-text-secondary: #94a3b8;
+  --hs-border-glow: rgba(0, 245, 212, 0.25);
+  --hs-font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--hs-bg-primary);
+  color: var(--hs-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--hs-neon-cyan);
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a:hover, a:focus {
+  color: #38bdf8;
+  text-shadow: 0 0 8px rgba(0, 245, 212, 0.6);
+}
+
+/* Glassmorphism & Cyber Card Utilities */
+.hs-cyber-card {
+  background: var(--hs-bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hs-border-glow);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hs-cyber-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 245, 212, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(0, 245, 212, 0.15);
+}
+
+/* CLS-Safe AdSense Slots (Ensures 100% Core Web Vitals Green Scores) */
+.hs-cls-safe-ad-slot {
+  display: block;
+  min-height: 250px;
+  max-width: 100%;
+  margin: 24px auto;
+  overflow: hidden;
+  background: rgba(11, 17, 32, 0.5);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/* Scanline Animation */
+.hs-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.hs-scanline::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Terminal & Code Block styling */
+pre, code {
+  font-family: var(--hs-font-mono);
+}
+
+code {
+  background: #0b1120;
+  color: var(--hs-neon-cyan);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+pre {
+  background: #020617;
+  color: #e2e8f0;
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  overflow-x: auto;
+}

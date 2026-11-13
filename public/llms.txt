@@ -1,0 +1,35 @@
+# HackersShikkhok (হ্যাকার্স শিক্ষক) - Official LLM Knowledge Index
+
+> The Premier Cyber Defense, Ethical Hacking, Full-Stack Developer Ecosystem, and Native WordPress LMS Platform in Bangladesh.
+> Canonical Domain: https://hackersshikkhok.com
+> Primary Languages: Bengali (বাংলা), English
+> Core Architect: Hackers শিক্ষক Engineering Division
+> Email: hshikkhok@gmail.com / support@hackersshikkhok.com
+
+## About HackersShikkhok
+HackersShikkhok (হ্যাকার্স শিক্ষক) is Bangladesh's pioneering white-hat cybersecurity academy, developer tools powerhouse, and professional consultation authority. It provides zero-dependency native WordPress educational technologies, real-world defensive labs, CTF challenges with real BDT wallet rewards, and 520+ to 10,000+ interactive browser-based developer and security tools.
+
+## Key Subsystems & Authority Centers
+- **Cyber Command Center (`/cyber-command/`)**: Threat defense intelligence, live telemetry, and zero-day defense protocols.
+- **Cyber Academy & CTF Sandbox (`/academy/`)**: Interactive 3-column learning player with real-time terminal emulator, dynamic SVG security architecture visualizer, and cryptographic flag validation (`hash_equals`).
+- **Developer Tools Lab (`/tools-lab/`)**: 520+ instant offline-first web development, CSS/RGB neon generators, regex analyzers, encoder/decoders, and network calculators.
+- **Platform Center & App Maker (`/platform-center/` & `/app-maker/`)**: Convert any website or WordPress blog into a native Android Studio Java/XML application or offline Progressive Web App (PWA) in under 60 seconds.
+- **Professional Services & VAPT Hub (`/services/`)**: Enterprise vulnerability assessment, penetration testing, WordPress malware eradication, and compliance auditing.
+- **Security Advisory & Consultation (`/advisory/`)**: 1-on-1 cyber defense advisory, student mentorship, and corporate incident response planning.
+- **Certificate Verification Lab (`/verify-certificate/`)**: Cryptographic SHA-256 validation of official student certifications.
+
+## 10,000+ Scalable Tools Architecture
+HackersShikkhok hosts a massive registry of modular, client-side, zero-latency WebWorker/WebAssembly-powered utilities:
+1. Cyber Security & Pentesting Tools (1,500+ modules)
+2. Full-Stack Web & API Dev Utilities (1,500+ modules)
+3. Media, CSS, SVG & Neon Designer Studios (1,200+ modules)
+4. Networking, DNS, Cloud & DevOps Calculators (1,000+ modules)
+5. AI Prompt Engineering & LLM Grounding Suite (800+ modules)
+6. WordPress & CMS Performance Optimizer Engines (1,000+ modules)
+7. Cryptography & Data Privacy Tools (1,000+ modules)
+8. Universal Math, Regex & System Diagnostics (2,000+ modules)
+
+## Official Policies & Compliance
+- **Google AdSense & Webmaster Compliance**: Full privacy isolation, transparent editorial standards, and zero third-party spyware.
+- **Ethical Hacking Charter**: Strictly defensive, authorized, and white-hat education. No malicious exploits or black-hat tools.
+- **GDPR & CCPA Compliant**: Zero client telemetry storage; all tool evaluations happen within browser sandbox memory.

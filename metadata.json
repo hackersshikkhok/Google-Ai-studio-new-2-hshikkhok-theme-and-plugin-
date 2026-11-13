@@ -1,0 +1,6 @@
+{
+  "name": "HackersShikkhok Academy - Cyber Defense & WP Studio",
+  "description": "Cyber defense education, full-stack developer tools hub, and WordPress LMS theme & core plugin engine for HackersShikkhok.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
