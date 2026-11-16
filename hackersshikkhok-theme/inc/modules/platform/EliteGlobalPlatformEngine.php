@@ -207,13 +207,13 @@ final class EliteGlobalPlatformEngine {
             $pid = wp_insert_post( array(
                 'post_title'   => 'Samsung Galaxy A56 5G Price in Bangladesh (2025 Official & Unofficial)',
                 'post_name'    => 'samsung-galaxy-a56-5g-price-bangladesh',
-                'post_content' => '<p>Samsung Galaxy A56 5G price in Bangladesh starts at <strong>৳46,999</strong> for the official 8GB+128GB variant with 1-year brand warranty. The unofficial/international variant is available from reputed multi-brand smartphone retailers starting from <strong>৳38,500</strong>.</p><h2>Price Comparison by Variants</h2><p>Here is the verified current market pricing across authorized brand shops and grey-market outlets in Dhaka (Bashundhara City, Jamuna Future Park, Multiplan Center):</p>',
+                'post_content' => '<p>Samsung Galaxy A56 5G price in Bangladesh starts at <strong>BDT 46,999</strong> for the official 8GB+128GB variant with 1-year brand warranty. The unofficial/international variant is available from reputed multi-brand smartphone retailers starting from <strong>BDT 38,500</strong>.</p><h2>Price Comparison by Variants</h2><p>Here is the verified current market pricing across authorized brand shops and grey-market outlets in Dhaka (Bashundhara City, Jamuna Future Park, Multiplan Center):</p>',
                 'post_status'  => 'publish',
                 'post_type'    => 'device_price',
             ) );
             if ( $pid && ! is_wp_error( $pid ) ) {
                 update_post_meta( $pid, '_hs_price_device_name', 'Samsung Galaxy A56 5G' );
-                update_post_meta( $pid, '_hs_price_bdt', '৳46,999' );
+                update_post_meta( $pid, '_hs_price_bdt', 'BDT 46,999' );
                 update_post_meta( $pid, '_hs_price_type', 'Official Brand Warranty' );
                 update_post_meta( $pid, '_hs_price_availability', 'In Stock across Bangladesh' );
                 update_post_meta( $pid, '_hs_price_last_verified', gmdate( 'Y-m-d' ) );
@@ -221,11 +221,11 @@ final class EliteGlobalPlatformEngine {
                 update_post_meta( $pid, '_hs_price_quick_specs', '6.7" AMOLED 120Hz | Exynos 1580 | 50MP OIS | 5000mAh 45W | 5G Network' );
                 update_post_meta( $pid, '_hs_related_review_url', home_url( '/device-reviews/samsung-galaxy-a56-5g-review/' ) );
                 update_post_meta( $pid, '_hs_price_variants_json', wp_json_encode( array(
-                    array( 'name' => '8GB RAM + 128GB ROM (Official)', 'price' => '৳46,999', 'badge' => 'Official' ),
-                    array( 'name' => '8GB RAM + 256GB ROM (Official)', 'price' => '৳52,499', 'badge' => 'Official' ),
-                    array( 'name' => '12GB RAM + 256GB ROM (Official)', 'price' => '৳57,999', 'badge' => 'Official' ),
-                    array( 'name' => '8GB RAM + 128GB ROM (Unofficial / Int)', 'price' => '৳38,500', 'badge' => 'Unofficial' ),
-                    array( 'name' => '8GB RAM + 256GB ROM (Unofficial / Int)', 'price' => '৳42,900', 'badge' => 'Unofficial' ),
+                    array( 'name' => '8GB RAM + 128GB ROM (Official)', 'price' => 'BDT 46,999', 'badge' => 'Official' ),
+                    array( 'name' => '8GB RAM + 256GB ROM (Official)', 'price' => 'BDT 52,499', 'badge' => 'Official' ),
+                    array( 'name' => '12GB RAM + 256GB ROM (Official)', 'price' => 'BDT 57,999', 'badge' => 'Official' ),
+                    array( 'name' => '8GB RAM + 128GB ROM (Unofficial / Int)', 'price' => 'BDT 38,500', 'badge' => 'Unofficial' ),
+                    array( 'name' => '8GB RAM + 256GB ROM (Unofficial / Int)', 'price' => 'BDT 42,900', 'badge' => 'Unofficial' ),
                 ) ) );
             }
         }

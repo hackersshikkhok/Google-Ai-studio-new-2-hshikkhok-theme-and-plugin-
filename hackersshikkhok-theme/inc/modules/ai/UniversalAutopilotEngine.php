@@ -34,12 +34,12 @@ final class UniversalAutopilotEngine {
             );
         }
 
-        $autopilot_enabled = get_option( 'hs_enable_ai_autopilot', true );
+        $autopilot_enabled = (bool) get_option( 'hs_enable_ai_autopilot', false );
         if ( ! $autopilot_enabled ) {
             return array(
                 'success' => false,
                 'status'  => 'disabled',
-                'reason'  => 'AI Autopilot is disabled in plugin settings.',
+                'reason'  => 'AI Autopilot is disabled in theme settings.',
             );
         }
 
@@ -48,6 +48,19 @@ final class UniversalAutopilotEngine {
         $mode       = get_option( 'hs_autopilot_publishing_mode', 'draft_first' );
         $min_score  = (int) get_option( 'hs_autopilot_min_quality_score', 85 );
 
+        // Prevent duplicate automated titles
+        $existing_dup = $wpdb->get_var( $wpdb->prepare(
+            "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_status IN ('publish','draft','pending') LIMIT 1",
+            wp_strip_all_tags( $topic_name )
+        ) );
+        if ( $existing_dup ) {
+            return array(
+                'success' => false,
+                'status'  => 'skipped_duplicate',
+                'reason'  => 'A post with this exact title already exists.',
+            );
+        }
+
         $start_time = microtime( true );
 
         // 1. Dispatch Real AI Generation via API Transport
@@ -55,6 +68,15 @@ final class UniversalAutopilotEngine {
         $content = $ai_response['content'];
         $provider = $ai_response['provider'];
         $model = $ai_response['model'];
+
+        // Never auto-publish fallback boilerplate on cron when no real AI provider responded
+        if ( 'HackersShikkhok-Local-Inference' === $provider && wp_doing_cron() ) {
+            return array(
+                'success' => false,
+                'status'  => 'skipped_no_api_key',
+                'reason'  => 'Skipped cron generation because no live AI provider API key is configured.',
+            );
+        }
 
         // 2. Run Deterministic Quality Gate Evaluation
         $eval = QualityGate::evaluate_content( $topic_name, $content, $post_type );
@@ -358,6 +380,9 @@ HTML;
 
     public static function process_next_job(): void {
         if ( UniversalFactoryAndEmergencyManager::is_emergency_stopped() ) {
+            return;
+        }
+        if ( ! (bool) get_option( 'hs_enable_ai_autopilot', false ) ) {
             return;
         }
         self::execute_cycle( 'tutorials' );

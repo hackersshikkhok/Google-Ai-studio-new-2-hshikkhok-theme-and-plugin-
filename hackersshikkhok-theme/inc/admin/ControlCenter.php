@@ -19,6 +19,8 @@ final class ControlCenter {
         add_submenu_page( 'hs-theme-settings', 'Autopilots & Bots', '🤖 Autopilots & Bots', 'manage_options', 'hs-autopilot-bots', array( self::class, 'render_autopilot_bots_screen' ) );
         add_submenu_page( 'hs-theme-settings', 'API Rotation & Quota Guard', '🔑 API Rotation & Quota Guard', 'manage_options', 'hs-api-rotator', array( self::class, 'render_api_rotator_screen' ) );
         add_submenu_page( 'hs-theme-settings', 'Homepage Posts Manager', '📰 Homepage Posts & Ranking', 'manage_options', 'hs-homepage-posts', array( self::class, 'render_homepage_posts_screen' ) );
+        add_submenu_page( 'hs-theme-settings', 'Moderation & Reports Queue', '🚩 Moderation & Reports', 'manage_options', 'hs-moderation-queue', array( self::class, 'render_moderation_screen' ) );
+        add_submenu_page( 'hs-theme-settings', 'Platform Analytics Overview', '📊 Platform Analytics', 'manage_options', 'hs-platform-analytics', array( self::class, 'render_analytics_screen' ) );
         add_submenu_page( 'hs-theme-settings', 'Performance & Cache Manager', '⚡ Performance & Cache', 'manage_options', 'hs-performance-cache', array( self::class, 'render_performance_screen' ) );
     }
 
@@ -99,11 +101,74 @@ final class ControlCenter {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( esc_html__( 'Unauthorized access.', 'hackersshikkhok-core' ) );
         }
+
+        global $wpdb;
+        $cleanup_msg = '';
+
+        if ( isset( $_POST['hs_kill_autopilot_crons'] ) && check_admin_referer( 'hs_cleanup_autopilot_nonce' ) ) {
+            wp_clear_scheduled_hook( 'hs_daily_autopilot_batch_event' );
+            wp_clear_scheduled_hook( 'hs_core_autopilot_cron_tick' );
+            update_option( 'hs_enable_ai_autopilot', false );
+            update_option( 'hs_autopilot_enabled', false );
+            $master = get_option( 'hs_theme_master_settings', array() );
+            if ( is_array( $master ) ) {
+                $master['enable_ai_autopilot'] = 0;
+                update_option( 'hs_theme_master_settings', $master );
+            }
+            $cleanup_msg = '<div class="notice notice-success is-dismissible"><p><strong>✓ All automated post-generation crons cleared &amp; disabled!</strong></p></div>';
+        }
+
+        if ( isset( $_POST['hs_trash_thin_autoposts'] ) && check_admin_referer( 'hs_cleanup_autopilot_nonce' ) ) {
+            $batch_ids = get_posts( array(
+                'post_type'      => array( 'post', 'tutorials', 'hs_question' ),
+                'post_status'    => array( 'publish', 'draft', 'pending' ),
+                'posts_per_page' => 250,
+                'fields'         => 'ids',
+                'meta_query'     => array(
+                    array(
+                        'key'     => '_hs_ai_generated',
+                        'compare' => 'EXISTS',
+                    ),
+                ),
+            ) );
+            $trashed_count = 0;
+            foreach ( $batch_ids as $pid ) {
+                if ( ! has_post_thumbnail( (int) $pid ) ) {
+                    wp_trash_post( (int) $pid );
+                    $trashed_count++;
+                }
+            }
+            $cleanup_msg = '<div class="notice notice-success is-dismissible"><p><strong>✓ Moved ' . (int) $trashed_count . ' auto-generated thin/no-thumbnail posts to Trash (you can review or empty Trash in Posts → Trash).</strong></p></div>';
+        }
+
+        $ai_no_thumb_count = (int) $wpdb->get_var(
+            "SELECT COUNT(DISTINCT p.ID) FROM {$wpdb->posts} p
+             INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_hs_ai_generated'
+             LEFT JOIN {$wpdb->postmeta} pt ON p.ID = pt.post_id AND pt.meta_key = '_thumbnail_id'
+             WHERE p.post_status IN ('publish','draft','pending') AND pt.meta_id IS NULL"
+        );
+
         $bots = BotEcosystem::get_all_bots();
         $autopilots = AutopilotRegistry::get_all_units();
         $logs = BotEcosystem::get_logs();
         ?>
         <div class="wrap hs-admin-wrap" style="max-width:1200px;color:#e2e8f0;">
+            <?php echo $cleanup_msg; ?>
+
+            <div style="background:#0b1120;padding:20px;border-radius:12px;border:1px solid #f43f5e;margin-bottom:20px;">
+                <h2 style="color:#fb7185;margin:0 0 8px;">🛑 Auto-Post Spam Protection &amp; Cleanup Utility</h2>
+                <p style="color:#94a3b8;font-size:13px;margin:0 0 14px;">
+                    Hourly automated thin/duplicate posting is now disabled in code. Detected <strong style="color:#fff;"><?php echo number_format( $ai_no_thumb_count ); ?></strong> AI-generated posts without featured images currently in Publish/Draft/Pending.
+                </p>
+                <form method="post" style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <?php wp_nonce_field( 'hs_cleanup_autopilot_nonce' ); ?>
+                    <button type="submit" name="hs_kill_autopilot_crons" value="1" class="button button-secondary">⛔ Clear &amp; Stop All Autopilot Crons</button>
+                    <?php if ( $ai_no_thumb_count > 0 ) : ?>
+                        <button type="submit" name="hs_trash_thin_autoposts" value="1" class="button button-primary" style="background:#ef4444;border-color:#ef4444;">🗑️ Move Thin Auto-Posts to Trash (Batch 250)</button>
+                    <?php endif; ?>
+                </form>
+            </div>
+
             <div style="background:#0b1120;padding:20px;border-radius:12px;border:1px solid #00f5d4;margin-bottom:20px;">
                 <h1 style="color:#fff;margin:0 0 6px;">🤖 8 Autonomous Pro Daemons &amp; 24 AI Autopilot Pipelines</h1>
                 <p style="color:#94a3b8;font-size:13px;margin:0;">
@@ -296,13 +361,44 @@ final class ControlCenter {
             wp_die( esc_html__( 'Unauthorized access.', 'hackersshikkhok-core' ) );
         }
 
+        $section_labels = array(
+            'hero_shortcuts'        => '01. 4 Core Pillars Hero Shortcuts',
+            'trending_slider'       => '02. Trending Posts Slider',
+            'featured_notices'      => '03. Featured Notices & Bulletins',
+            'categories'            => '04. Knowledge Faculties & Categories',
+            'latest_feed'           => '05. Latest Posts Feed & Filter Tabs',
+            'popular_posts'         => '06. Popular & High Engagement Posts',
+            'qa_showcase'           => '07. Community Q&A Showcase',
+            'featured_tools'        => '08. Essential Featured Tools',
+            'tools_gateway'         => '09. Explore 2,024+ Tools Gateway',
+            'academy_courses'       => '10. Featured Academy Courses',
+            'tutorials'             => '11. Latest Tutorials & Guides',
+            'video_hub'             => '12. Video Learning Center',
+            'community_leaderboard' => '13. Top Contributors Leaderboard',
+        );
+
         if ( isset( $_POST['hs_save_homepage_settings'] ) && check_admin_referer( 'hs_homepage_settings_nonce' ) ) {
-            $feat_cat_val = sanitize_text_field( wp_unslash( $_POST['hs_featured_category'] ?? 'notice' ) );
-            $w_likes_val  = floatval( $_POST['hs_popular_weight_likes'] ?? 1.0 );
-            $w_comms_val  = floatval( $_POST['hs_popular_weight_comments'] ?? 1.5 );
-            $w_views_val  = floatval( $_POST['hs_popular_weight_views'] ?? 0.5 );
-            $pop_cnt_val  = intval( $_POST['hs_popular_posts_count'] ?? 6 );
-            $lat_cnt_val  = intval( $_POST['hs_latest_posts_count'] ?? 8 );
+            $feat_cat_val    = sanitize_text_field( wp_unslash( $_POST['hs_featured_category'] ?? 'notice' ) );
+            $curated_ids_val = sanitize_text_field( wp_unslash( $_POST['hs_curated_post_ids'] ?? '' ) );
+            $w_likes_val     = floatval( $_POST['hs_popular_weight_likes'] ?? 1.0 );
+            $w_comms_val     = floatval( $_POST['hs_popular_weight_comments'] ?? 1.5 );
+            $w_views_val     = floatval( $_POST['hs_popular_weight_views'] ?? 0.5 );
+            $pop_cnt_val     = intval( $_POST['hs_popular_posts_count'] ?? 6 );
+            $lat_cnt_val     = intval( $_POST['hs_latest_posts_count'] ?? 8 );
+
+            $raw_order   = isset( $_POST['hs_section_order'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['hs_section_order'] ) ) : '';
+            $order_parts = array_filter( array_map( 'sanitize_key', explode( ',', $raw_order ) ) );
+            $clean_order = array();
+            foreach ( $order_parts as $sk ) {
+                if ( isset( $section_labels[ $sk ] ) && ! in_array( $sk, $clean_order, true ) ) {
+                    $clean_order[] = $sk;
+                }
+            }
+            foreach ( array_keys( $section_labels ) as $sk ) {
+                if ( ! in_array( $sk, $clean_order, true ) ) {
+                    $clean_order[] = $sk;
+                }
+            }
 
             update_option( 'hs_featured_category', $feat_cat_val );
             update_option( 'hs_popular_weight_likes', $w_likes_val );
@@ -314,48 +410,66 @@ final class ControlCenter {
             if ( function_exists( 'hs_get_all_settings' ) && defined( 'HS_MASTER_SETTINGS_OPTION' ) ) {
                 $master = hs_get_all_settings( true );
                 $master['featured_category']       = $feat_cat_val;
+                $master['home_curated_post_ids']   = $curated_ids_val;
+                $master['home_section_order']      = $clean_order;
                 $master['popular_weight_likes']    = $w_likes_val;
                 $master['popular_weight_comments'] = $w_comms_val;
                 $master['popular_weight_views']    = $w_views_val;
                 $master['popular_posts_count']     = $pop_cnt_val;
                 $master['latest_posts_count']      = $lat_cnt_val;
+                foreach ( array_keys( $section_labels ) as $sk ) {
+                    $master[ 'home_show_' . $sk ] = isset( $_POST[ 'hs_show_' . $sk ] ) ? 1 : 0;
+                }
                 update_option( HS_MASTER_SETTINGS_OPTION, $master );
             }
             if ( function_exists( 'hs_purge_all_caches' ) ) {
                 hs_purge_all_caches();
             }
 
-            echo '<div class="notice notice-success is-dismissible"><p><strong>✓ Homepage posts ranking &amp; display settings saved successfully!</strong></p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p><strong>✓ Homepage section order, curated posts &amp; ranking settings saved successfully!</strong></p></div>';
         }
 
-        $feat_cat = get_option( 'hs_featured_category', 'notice' );
-        $w_likes  = get_option( 'hs_popular_weight_likes', 1.0 );
-        $w_comms  = get_option( 'hs_popular_weight_comments', 1.5 );
-        $w_views  = get_option( 'hs_popular_weight_views', 0.5 );
-        $pop_cnt  = get_option( 'hs_popular_posts_count', 6 );
-        $lat_cnt  = get_option( 'hs_latest_posts_count', 8 );
+        $master      = function_exists( 'hs_get_all_settings' ) ? hs_get_all_settings( true ) : array();
+        $feat_cat    = get_option( 'hs_featured_category', 'notice' );
+        $curated_ids = (string) ( $master['home_curated_post_ids'] ?? '' );
+        $w_likes     = get_option( 'hs_popular_weight_likes', 1.0 );
+        $w_comms     = get_option( 'hs_popular_weight_comments', 1.5 );
+        $w_views     = get_option( 'hs_popular_weight_views', 0.5 );
+        $pop_cnt     = get_option( 'hs_popular_posts_count', 6 );
+        $lat_cnt     = get_option( 'hs_latest_posts_count', 8 );
+        $saved_order = ! empty( $master['home_section_order'] ) && is_array( $master['home_section_order'] )
+            ? $master['home_section_order']
+            : array_keys( $section_labels );
         ?>
-        <div class="wrap hs-admin-wrap" style="max-width:1000px; color:#e2e8f0;">
+        <div class="wrap hs-admin-wrap" style="max-width:1050px; color:#e2e8f0;">
             <div style="background:#0b1120; padding:24px; border-radius:14px; border:1px solid #00f5d4; margin-bottom:20px;">
-                <h1 style="color:#fff; margin:0 0 8px;">📰 Homepage Posts, Notice Category &amp; Ranking Manager</h1>
-                <p style="color:#94a3b8; margin:0; font-size:13px;">Configure Featured Notice category, Popular posts automatic ranking formula (likes, comments, views weights), and display counts for Homepage sections.</p>
+                <h1 style="color:#fff; margin:0 0 8px;">📰 Homepage Layout, Curated Posts &amp; Ranking Manager</h1>
+                <p style="color:#94a3b8; margin:0; font-size:13px;">Reorder homepage sections dynamically, pin curated editorial Post IDs, toggle individual sections, and tune engagement ranking weights.</p>
             </div>
 
             <form method="post" action="" style="background:#0b1120; padding:24px; border-radius:14px; border:1px solid #1e293b;">
                 <?php wp_nonce_field( 'hs_homepage_settings_nonce' ); ?>
-                
+                <input type="hidden" name="hs_section_order" id="hs-section-order-input" value="<?php echo esc_attr( implode( ',', $saved_order ) ); ?>" />
+
                 <table class="form-table" style="color:#fff;">
                     <tr>
                         <th scope="row"><label for="hs_featured_category" style="color:#00f5d4; font-weight:700;">Featured Posts Category (Notice):</label></th>
                         <td>
-                            <input type="text" name="hs_featured_category" id="hs_featured_category" value="<?php echo esc_attr( $feat_cat ); ?>" style="width:100%; max-width:400px; background:#050811; border:1px solid #38bdf8; color:#fff; padding:8px 12px; border-radius:6px;" />
-                            <p class="description" style="color:#94a3b8; font-size:12px;">Category slug or ID for Featured Notice posts displayed on the home page.</p>
+                            <input type="text" name="hs_featured_category" id="hs_featured_category" value="<?php echo esc_attr( (string) $feat_cat ); ?>" style="width:100%; max-width:400px; background:#050811; border:1px solid #38bdf8; color:#fff; padding:8px 12px; border-radius:6px;" />
+                            <p class="description" style="color:#94a3b8; font-size:12px;">Category slug for Featured Notices displayed on the home page.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="hs_curated_post_ids" style="color:#00f5d4; font-weight:700;">Pinned Curated Post IDs (Optional):</label></th>
+                        <td>
+                            <input type="text" name="hs_curated_post_ids" id="hs_curated_post_ids" value="<?php echo esc_attr( $curated_ids ); ?>" placeholder="e.g. 142, 198, 205" style="width:100%; max-width:400px; background:#050811; border:1px solid #38bdf8; color:#fff; padding:8px 12px; border-radius:6px;" />
+                            <p class="description" style="color:#94a3b8; font-size:12px;">Comma-separated Post IDs to force-pin in the Featured Notices showcase before fallback category posts.</p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label style="color:#eab308; font-weight:700;">Popular Posts Ranking Formula Weights:</label></th>
                         <td>
-                            <div style="display:flex; gap:16px; align-items:center;">
+                            <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
                                 <div>
                                     <label style="display:block; font-size:11px; color:#94a3b8;">Likes Weight</label>
                                     <input type="number" step="0.1" name="hs_popular_weight_likes" value="<?php echo esc_attr( (string) $w_likes ); ?>" style="width:80px; background:#050811; border:1px solid #eab308; color:#fff; padding:6px; border-radius:6px;" />
@@ -369,29 +483,202 @@ final class ControlCenter {
                                     <input type="number" step="0.1" name="hs_popular_weight_views" value="<?php echo esc_attr( (string) $w_views ); ?>" style="width:80px; background:#050811; border:1px solid #eab308; color:#fff; padding:6px; border-radius:6px;" />
                                 </div>
                             </div>
-                            <p class="description" style="color:#94a3b8; font-size:12px; margin-top:6px;">Popular posts score = (Likes × Weight) + (Comments × Weight) + (Views × Weight).</p>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><label for="hs_popular_posts_count" style="color:#eab308; font-weight:700;">Popular Posts Count:</label></th>
+                        <th scope="row"><label for="hs_popular_posts_count" style="color:#eab308; font-weight:700;">Popular / Latest Counts:</label></th>
                         <td>
-                            <input type="number" name="hs_popular_posts_count" id="hs_popular_posts_count" value="<?php echo esc_attr( (string) $pop_cnt ); ?>" style="width:100px; background:#050811; border:1px solid #eab308; color:#fff; padding:8px 12px; border-radius:6px;" />
-                            <p class="description" style="color:#94a3b8; font-size:12px;">Number of top popular posts to show on the homepage.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="hs_latest_posts_count" style="color:#10b981; font-weight:700;">Latest Posts Count:</label></th>
-                        <td>
-                            <input type="number" name="hs_latest_posts_count" id="hs_latest_posts_count" value="<?php echo esc_attr( (string) $lat_cnt ); ?>" style="width:100px; background:#050811; border:1px solid #10b981; color:#fff; padding:8px 12px; border-radius:6px;" />
-                            <p class="description" style="color:#94a3b8; font-size:12px;">Number of chronological latest posts to show on the homepage.</p>
+                            <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                                <label style="color:#94a3b8; font-size:12px;">Popular: <input type="number" name="hs_popular_posts_count" id="hs_popular_posts_count" value="<?php echo esc_attr( (string) $pop_cnt ); ?>" style="width:80px; background:#050811; border:1px solid #eab308; color:#fff; padding:6px; border-radius:6px;" /></label>
+                                <label style="color:#94a3b8; font-size:12px;">Latest: <input type="number" name="hs_latest_posts_count" id="hs_latest_posts_count" value="<?php echo esc_attr( (string) $lat_cnt ); ?>" style="width:80px; background:#050811; border:1px solid #10b981; color:#fff; padding:6px; border-radius:6px;" /></label>
+                            </div>
                         </td>
                     </tr>
                 </table>
+
+                <h3 style="color:#00f5d4; margin:24px 0 10px;">🔀 Homepage Section Order &amp; Visibility</h3>
+                <div id="hs-section-order-list" style="display:flex; flex-direction:column; gap:8px; max-width:720px;">
+                    <?php foreach ( $saved_order as $sk ) :
+                        if ( ! isset( $section_labels[ $sk ] ) ) continue;
+                        $enabled = ! isset( $master[ 'home_show_' . $sk ] ) || ! empty( $master[ 'home_show_' . $sk ] );
+                    ?>
+                        <div class="hs-order-row" data-sec="<?php echo esc_attr( $sk ); ?>" style="background:#050811; border:1px solid #1e293b; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                            <label style="display:flex; align-items:center; gap:10px; color:#e2e8f0; font-weight:700; font-size:13px; cursor:pointer;">
+                                <input type="checkbox" name="hs_show_<?php echo esc_attr( $sk ); ?>" value="1" <?php checked( $enabled ); ?> />
+                                <span><?php echo esc_html( $section_labels[ $sk ] ); ?></span>
+                            </label>
+                            <div style="display:flex; gap:6px;">
+                                <button type="button" class="button hs-move-up" title="Move Up">↑</button>
+                                <button type="button" class="button hs-move-down" title="Move Down">↓</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
 
                 <p class="submit" style="margin-top:24px;">
                     <input type="submit" name="hs_save_homepage_settings" id="hs_save_homepage_settings" class="button button-primary" value="Save Homepage Configuration" style="background:#00f5d4; color:#050811; font-weight:800; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;" />
                 </p>
             </form>
+        </div>
+        <script>
+        (function(){
+            var list = document.getElementById('hs-section-order-list');
+            var hidden = document.getElementById('hs-section-order-input');
+            if (!list || !hidden) return;
+            function syncOrder(){
+                var keys = Array.from(list.querySelectorAll('.hs-order-row')).map(function(el){ return el.getAttribute('data-sec'); });
+                hidden.value = keys.join(',');
+            }
+            list.addEventListener('click', function(e){
+                var row = e.target.closest('.hs-order-row');
+                if (!row) return;
+                if (e.target.classList.contains('hs-move-up') && row.previousElementSibling) {
+                    list.insertBefore(row, row.previousElementSibling);
+                    syncOrder();
+                } else if (e.target.classList.contains('hs-move-down') && row.nextElementSibling) {
+                    list.insertBefore(row.nextElementSibling, row);
+                    syncOrder();
+                }
+            });
+        })();
+        </script>
+        <?php
+    }
+
+    public static function render_moderation_screen(): void {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Unauthorized access.', 'hackersshikkhok-theme' ) );
+        }
+
+        $queue = get_option( '_hs_reported_content_queue', array() );
+        if ( ! is_array( $queue ) ) {
+            $queue = array();
+        }
+
+        if ( isset( $_POST['hs_mod_action'], $_POST['hs_mod_index'] ) && check_admin_referer( 'hs_moderation_nonce' ) ) {
+            $idx    = (int) $_POST['hs_mod_index'];
+            $action = sanitize_key( (string) $_POST['hs_mod_action'] );
+            if ( isset( $queue[ $idx ] ) ) {
+                $target_post_id = (int) ( $queue[ $idx ]['post_id'] ?? 0 );
+                if ( 'trash_post' === $action && $target_post_id > 0 ) {
+                    wp_trash_post( $target_post_id );
+                    $queue[ $idx ]['status'] = 'trashed';
+                } elseif ( 'resolve' === $action ) {
+                    $queue[ $idx ]['status'] = 'resolved';
+                } elseif ( 'dismiss' === $action ) {
+                    unset( $queue[ $idx ] );
+                    $queue = array_values( $queue );
+                }
+                update_option( '_hs_reported_content_queue', $queue );
+                echo '<div class="notice notice-success is-dismissible"><p><strong>✓ Moderation queue updated.</strong></p></div>';
+            }
+        }
+        ?>
+        <div class="wrap hs-admin-wrap" style="max-width:1150px; color:#e2e8f0;">
+            <div style="background:#0b1120; padding:22px; border-radius:14px; border:1px solid #f43f5e; margin-bottom:20px;">
+                <h1 style="color:#fff; margin:0 0 6px;">🚩 Content Moderation &amp; Reported Items Queue</h1>
+                <p style="color:#94a3b8; margin:0; font-size:13px;">Review articles, Q&amp;A topics, and developer tools flagged by the community.</p>
+            </div>
+
+            <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:20px;">
+                <?php if ( empty( $queue ) ) : ?>
+                    <p style="color:#10b981; font-weight:700; margin:0;">✓ All clear! No pending moderation reports in the queue.</p>
+                <?php else : ?>
+                    <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                        <thead>
+                            <tr style="border-bottom:1px solid #1e293b; color:#00f5d4;">
+                                <th style="padding:10px;">Type / Target</th>
+                                <th style="padding:10px;">Reason &amp; Details</th>
+                                <th style="padding:10px;">Reporter</th>
+                                <th style="padding:10px;">Status</th>
+                                <th style="padding:10px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ( $queue as $idx => $item ) :
+                                $pid = (int) ( $item['post_id'] ?? 0 );
+                                $st  = (string) ( $item['status'] ?? 'open' );
+                            ?>
+                                <tr style="border-bottom:1px solid #1e293b; color:#cbd5e1;">
+                                    <td style="padding:10px;">
+                                        <strong><?php echo esc_html( (string) ( $item['target_label'] ?? ( $pid ? get_the_title( $pid ) : 'Content #' . $pid ) ) ); ?></strong>
+                                        <?php if ( $pid > 0 ) : ?>
+                                            <div><a href="<?php echo esc_url( (string) get_permalink( $pid ) ); ?>" target="_blank" style="color:#38bdf8; font-size:11px;">View Live ↗</a></div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="padding:10px;">
+                                        <span style="color:#f59e0b; font-weight:700;"><?php echo esc_html( (string) ( $item['reason'] ?? 'Flagged' ) ); ?></span>
+                                        <div style="color:#94a3b8; font-size:12px;"><?php echo esc_html( (string) ( $item['details'] ?? '' ) ); ?></div>
+                                    </td>
+                                    <td style="padding:10px; font-family:monospace;">User #<?php echo (int) ( $item['user_id'] ?? 0 ); ?><br><small><?php echo esc_html( (string) ( $item['reported_at'] ?? '' ) ); ?></small></td>
+                                    <td style="padding:10px;"><span style="padding:2px 8px; border-radius:4px; background:#1e293b; color:#00f5d4; font-size:11px;"><?php echo esc_html( strtoupper( $st ) ); ?></span></td>
+                                    <td style="padding:10px;">
+                                        <form method="post" style="display:flex; gap:6px; flex-wrap:wrap;">
+                                            <?php wp_nonce_field( 'hs_moderation_nonce' ); ?>
+                                            <input type="hidden" name="hs_mod_index" value="<?php echo (int) $idx; ?>" />
+                                            <button type="submit" name="hs_mod_action" value="resolve" class="button button-small">✓ Resolve</button>
+                                            <?php if ( $pid > 0 ) : ?>
+                                                <button type="submit" name="hs_mod_action" value="trash_post" class="button button-small" style="color:#f43f5e;">🗑 Trash Post</button>
+                                            <?php endif; ?>
+                                            <button type="submit" name="hs_mod_action" value="dismiss" class="button button-small">✕ Dismiss</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function render_analytics_screen(): void {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Unauthorized access.', 'hackersshikkhok-theme' ) );
+        }
+        global $wpdb;
+
+        $posts_count     = (int) wp_count_posts( 'post' )->publish + (int) wp_count_posts( 'tutorials' )->publish;
+        $pending_posts   = (int) wp_count_posts( 'post' )->pending + (int) wp_count_posts( 'tools' )->pending;
+        $qa_count        = (int) wp_count_posts( 'hs_question' )->publish;
+        $courses_count   = (int) wp_count_posts( 'hs_course' )->publish;
+        $users_count     = (int) ( count_users()['total_users'] ?? 0 );
+        $comments_count  = (int) wp_count_comments()->approved;
+        $certs_table     = $wpdb->prefix . 'hs_certificates';
+        $certs_issued    = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $certs_table ) ) ? (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$certs_table}" ) : 0;
+        $tools_count     = class_exists( '\\HackersShikkhok\\Theme\\Modules\\Tools\\UniversalToolRegistry' )
+            ? count( \HackersShikkhok\Theme\Modules\Tools\UniversalToolRegistry::get_all_tools() )
+            : 2024;
+        ?>
+        <div class="wrap hs-admin-wrap" style="max-width:1150px; color:#e2e8f0;">
+            <div style="background:#0b1120; padding:22px; border-radius:14px; border:1px solid #00f5d4; margin-bottom:20px;">
+                <h1 style="color:#fff; margin:0 0 6px;">📊 HackersShikkhok Platform Analytics &amp; Quick Admin</h1>
+                <p style="color:#94a3b8; margin:0; font-size:13px;">Live database counts across Articles, Q&amp;A Forum, Tools Directory, Academy LMS &amp; Members.</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px; margin-bottom:24px;">
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Published Posts &amp; Tutorials</span><strong style="display:block; font-size:26px; color:#00f5d4;"><?php echo number_format( $posts_count ); ?></strong></div>
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Q&amp;A Topics Published</span><strong style="display:block; font-size:26px; color:#fbbf24;"><?php echo number_format( $qa_count ); ?></strong></div>
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Registered Tools</span><strong style="display:block; font-size:26px; color:#10b981;"><?php echo number_format( $tools_count ); ?>+</strong></div>
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Academy Courses &amp; Certs</span><strong style="display:block; font-size:26px; color:#a78bfa;"><?php echo number_format( $courses_count ); ?> / <?php echo number_format( $certs_issued ); ?></strong></div>
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Registered Members</span><strong style="display:block; font-size:26px; color:#38bdf8;"><?php echo number_format( $users_count ); ?></strong></div>
+                <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:16px;"><span style="color:#94a3b8; font-size:12px;">Pending Submissions / Comments</span><strong style="display:block; font-size:26px; color:#f43f5e;"><?php echo number_format( $pending_posts ); ?> / <?php echo number_format( $comments_count ); ?></strong></div>
+            </div>
+
+            <div style="background:#0b1120; border:1px solid #1e293b; border-radius:12px; padding:20px;">
+                <h2 style="color:#fff; margin:0 0 14px;">⚡ Direct Content &amp; Ecosystem Management Links</h2>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <a class="button button-primary" href="<?php echo esc_url( admin_url( 'edit.php' ) ); ?>">Manage Posts</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'edit.php?post_type=hs_question' ) ); ?>">Manage Q&amp;A</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'edit.php?post_type=tools' ) ); ?>">Manage Pending Tools</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'edit.php?post_type=hs_course' ) ); ?>">Manage Courses</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'edit-comments.php' ) ); ?>">Comments &amp; Reviews</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'users.php' ) ); ?>">Manage Members</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=category' ) ); ?>">Categories</a>
+                    <a class="button button-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=hs-moderation-queue' ) ); ?>">Moderation Queue</a>
+                </div>
+            </div>
         </div>
         <?php
     }

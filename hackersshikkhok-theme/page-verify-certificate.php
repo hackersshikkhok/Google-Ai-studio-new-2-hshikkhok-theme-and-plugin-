@@ -11,20 +11,35 @@ declare(strict_types=1);
 get_header();
 
 global $wpdb;
-$cert_hash = sanitize_text_field( get_query_var( 'cert_hash', $_GET['hash'] ?? '' ) );
+$cert_hash = sanitize_text_field( (string) ( get_query_var( 'cert_hash' ) ?: ( $_GET['hash'] ?? ( $_GET['cert_id'] ?? ( $_GET['cert_code'] ?? '' ) ) ) ) );
 $cert = null;
 
 if ( ! empty( $cert_hash ) ) {
-    $cert_table = $wpdb->prefix . 'cyber_certificates';
-    $table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $cert_table ) ) === $cert_table;
-    if ( ! $table_exists ) {
-        $cert_table = $wpdb->prefix . 'hs_certificates';
-        $table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $cert_table ) ) === $cert_table;
+    $hs_table    = $wpdb->prefix . 'hs_certificates';
+    $cyber_table = $wpdb->prefix . 'cyber_certificates';
+
+    if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $hs_table ) ) === $hs_table ) {
+        $row = $wpdb->get_row(
+            $wpdb->prepare( "SELECT * FROM {$hs_table} WHERE cert_code = %s OR sha256_signature = %s LIMIT 1", $cert_hash, $cert_hash ),
+            ARRAY_A
+        );
+        if ( $row ) {
+            $cert = array(
+                'student_name'      => $row['recipient_display_name'] ?? '',
+                'course_title'      => $row['course_title_snapshot'] ?? '',
+                'issued_at'         => $row['issued_at'] ?? '',
+                'xp_earned'         => 500,
+                'bdt_awarded'       => 50,
+                'verification_hash' => $row['sha256_signature'] ?? $cert_hash,
+                'cert_code'         => $row['cert_code'] ?? $cert_hash,
+                'status'            => $row['status'] ?? 'valid',
+            );
+        }
     }
 
-    if ( $table_exists ) {
+    if ( ! $cert && $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $cyber_table ) ) === $cyber_table ) {
         $cert = $wpdb->get_row(
-            $wpdb->prepare( "SELECT * FROM {$cert_table} WHERE verification_hash = %s LIMIT 1", $cert_hash ),
+            $wpdb->prepare( "SELECT * FROM {$cyber_table} WHERE verification_hash = %s LIMIT 1", $cert_hash ),
             ARRAY_A
         );
     }

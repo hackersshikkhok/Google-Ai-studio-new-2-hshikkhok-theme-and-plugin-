@@ -98,6 +98,9 @@ declare(strict_types=1);
     </div>
 </footer>
 
+<!-- Cyber AI Chatbot Drawer / Modal -->
+<?php get_template_part( 'template-parts/ai-chatbot-modal' ); ?>
+
 <!-- Unified Mobile App Bottom Navigation Dock -->
 <?php get_template_part( 'template-parts/mobile-nav' ); ?>
 

@@ -1,8 +1,16 @@
 <?php
 /**
- * HackersShikkhok - Mobile Bottom App Navigation Dock (Clean & Native Feel)
+ * HackersShikkhok - Mobile Bottom App Navigation Dock (PART 10 Specification)
  * Brand: HackersShikkhok (https://hackersshikkhok.com)
+ *
+ * Slots:
+ * 1. Home
+ * 2. Explore
+ * 3. Create (+ Action Bottom Sheet: Write a Post, Ask a Question, Start a Discussion, Submit a Tool)
+ * 4. Community (Q&A & Discussions)
+ * 5. Profile (Avatar / Login)
  */
+declare(strict_types=1);
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -14,135 +22,129 @@ $noti_count   = $is_logged_in && class_exists( '\HackersShikkhok\Theme\Modules\C
     ? \HackersShikkhok\Theme\Modules\Community\NotificationEngine::get_unread_count( $current_uid )
     : 0;
 
-$curr_uri = $_SERVER['REQUEST_URI'] ?? '/';
-$is_home    = is_front_page();
-$is_academy = strpos( $curr_uri, 'academy' ) !== false;
-$is_tools   = strpos( $curr_uri, 'tools' ) !== false;
-$is_dash    = strpos( $curr_uri, 'dashboard' ) !== false;
+$curr_uri   = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+$is_home    = is_front_page() || is_home();
+$is_explore = str_contains( $curr_uri, '/explore' ) || str_contains( $curr_uri, '/platform-center' ) || str_contains( $curr_uri, '/center' ) || str_contains( $curr_uri, '/tools' ) || str_contains( $curr_uri, '/academy' );
+$is_comm    = str_contains( $curr_uri, '/forum' ) || str_contains( $curr_uri, '/community' ) || str_contains( $curr_uri, '/qa' ) || is_post_type_archive( 'hs_question' ) || is_singular( 'hs_question' );
+$is_profile = str_contains( $curr_uri, '/profile' ) || is_author() || $is_dash;
 ?>
+<!-- Mobile Bottom Navigation Dock (PART 10 Standard) -->
 <nav class="mobile-nav" aria-label="Mobile Navigation Bar">
-    <!-- 1. HOME -->
-    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="m-nav-item <?php echo $is_home ? 'active' : ''; ?>">
-        <span class="m-nav-icon">🏠</span>
-        <small>হোম</small>
+    <!-- 1. Home -->
+    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="m-nav-item hs-tap-red <?php echo $is_home ? 'active' : ''; ?>">
+        <span class="m-nav-icon" aria-hidden="true">🏠</span>
+        <small>Home</small>
     </a>
 
-    <!-- 2. ACADEMY -->
-    <a href="<?php echo esc_url( home_url( '/academy/' ) ); ?>" class="m-nav-item <?php echo $is_academy ? 'active' : ''; ?>">
-        <span class="m-nav-icon">🎓</span>
-        <small>একাডেমি</small>
+    <!-- 2. Explore -->
+    <a href="<?php echo esc_url( home_url( '/platform-center/' ) ); ?>" class="m-nav-item hs-tap-red <?php echo ( $is_explore && ! $is_home ) ? 'active' : ''; ?>">
+        <span class="m-nav-icon" aria-hidden="true">🧭</span>
+        <small>Explore</small>
     </a>
 
-    <!-- 3. CENTER ACTION BUTTON (+) -->
-    <a href="<?php echo esc_url( $is_logged_in ? home_url( '/dashboard/?tab=create' ) : wp_login_url() ); ?>"
-       class="m-nav-center <?php echo ! $is_logged_in ? 'hs-auth-trigger' : ''; ?>"
-       data-auth-action="<?php echo ! $is_logged_in ? 'login' : ''; ?>"
-       title="<?php echo $is_logged_in ? 'পোস্ট তৈরি করুন' : 'লগইন করুন'; ?>">
-        <span class="m-center-plus">+</span>
+    <!-- 3. Center Create Action Button -->
+    <button type="button" class="m-nav-center m-nav-center--btn hs-tap-red" onclick="openHsCreateSheet(event)" title="Create New Content" aria-label="Create New Content">
+        <span class="m-center-ai-icon" aria-hidden="true">➕</span>
+    </button>
+
+    <!-- 4. Community -->
+    <a href="<?php echo esc_url( home_url( '/forum/' ) ); ?>" class="m-nav-item hs-tap-red <?php echo $is_comm ? 'active' : ''; ?>">
+        <span class="m-nav-icon" aria-hidden="true">💬</span>
+        <small>Community</small>
     </a>
 
-    <!-- 4. TOOLS -->
-    <a href="<?php echo esc_url( home_url( '/tools/' ) ); ?>" class="m-nav-item <?php echo $is_tools ? 'active' : ''; ?>">
-        <span class="m-nav-icon">⚡</span>
-        <small>টুলস</small>
-    </a>
-
-    <!-- 5. ALERTS / PORTAL -->
+    <!-- 5. Profile / Login -->
     <?php if ( $is_logged_in ) : ?>
-        <a href="<?php echo esc_url( home_url( '/dashboard/?tab=notifications' ) ); ?>" class="m-nav-item <?php echo $is_dash ? 'active' : ''; ?>" style="position:relative;">
-            <span class="m-nav-icon">🔔</span>
-            <small>অ্যালার্ট</small>
-            <?php if ( $noti_count > 0 ) : ?>
-                <span class="m-noti-badge"><?php echo (int) $noti_count; ?></span>
-            <?php endif; ?>
+        <a href="<?php echo esc_url( home_url( '/profile/' ) ); ?>" class="m-nav-item m-nav-profile hs-tap-red <?php echo $is_profile ? 'active' : ''; ?>" title="My Profile">
+            <span class="m-nav-avatar-wrap">
+                <?php echo get_avatar( $current_uid, 24 ); ?>
+                <?php if ( $noti_count > 0 ) : ?>
+                    <span class="m-noti-badge"><?php echo (int) $noti_count; ?></span>
+                <?php endif; ?>
+            </span>
+            <small>Profile</small>
         </a>
     <?php else : ?>
-        <a href="<?php echo esc_url( wp_login_url() ); ?>" class="m-nav-item hs-auth-trigger" data-auth-action="login">
-            <span class="m-nav-icon">🔑</span>
-            <small>লগইন</small>
-        </a>
+        <button type="button" class="m-nav-item m-nav-item--btn hs-tap-red" onclick="openHsAuthModal('login')" title="Profile / Login">
+            <span class="m-nav-icon" aria-hidden="true">👤</span>
+            <small>Profile</small>
+        </button>
     <?php endif; ?>
 </nav>
 
-<style>
-.mobile-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: rgba(5, 8, 17, 0.96);
-    border-top: 1px solid rgba(0, 245, 212, 0.25);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 4px 0 6px 0;
-    z-index: 999999;
-    height: 52px;
-}
-.m-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 10px;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    gap: 2px;
-}
-.m-nav-item:hover, .m-nav-item.active {
-    color: #00f5d4;
-    text-shadow: 0 0 8px rgba(0, 245, 212, 0.5);
-}
-.m-nav-icon {
-    font-size: 18px;
-    line-height: 1;
-}
-.m-nav-center {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #00f5d4, #00bbf9);
-    border-radius: 50%;
-    margin-top: -20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 18px rgba(0, 245, 212, 0.55);
-    text-decoration: none;
-    transition: transform 0.2s ease;
-    border: 3px solid #050811;
-}
-.m-nav-center:hover {
-    transform: scale(1.1);
-}
-.m-center-plus {
-    color: #050811;
-    font-size: 24px;
-    font-weight: 900;
-    line-height: 1;
-}
-.m-noti-badge {
-    position: absolute;
-    top: -2px;
-    right: 4px;
-    background: #ff007f;
-    color: #fff;
-    font-size: 9px;
-    font-weight: 900;
-    min-width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 8px #ff007f;
-}
-@media (min-width: 901px) {
-    .mobile-nav {
-        display: none !important;
+<!-- Mobile Create Action Sheet & Backdrop (PART 10 Specification) -->
+<div id="hs-create-sheet-backdrop" class="hs-create-sheet-backdrop" onclick="closeHsCreateSheet()"></div>
+
+<div id="hs-create-action-sheet" class="hs-create-action-sheet" role="dialog" aria-modal="true" aria-labelledby="hs-sheet-title">
+    <div class="hs-sheet-header">
+        <h3 class="hs-sheet-title" id="hs-sheet-title">
+            <span>➕</span> <span>Create Content &amp; Tools</span>
+        </h3>
+        <button type="button" class="hs-sheet-close-btn" onclick="closeHsCreateSheet()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="hs-sheet-grid">
+        <!-- 1. Write a Post -->
+        <a href="<?php echo esc_url( home_url( '/dashboard/?tab=create' ) ); ?>" class="hs-sheet-item" onclick="closeHsCreateSheet()">
+            <span class="hs-sheet-icon">✍️</span>
+            <div class="hs-sheet-text">
+                <h4>Write a Post</h4>
+                <p>Publish an article, code guide, tutorial, or hardware review</p>
+            </div>
+        </a>
+
+        <!-- 2. Ask a Question -->
+        <a href="<?php echo esc_url( home_url( '/forum/?action=ask' ) ); ?>" class="hs-sheet-item" onclick="closeHsCreateSheet()">
+            <span class="hs-sheet-icon">❓</span>
+            <div class="hs-sheet-text">
+                <h4>Ask a Question</h4>
+                <p>Get verified solutions from cybersecurity &amp; coding mentors</p>
+            </div>
+        </a>
+
+        <!-- 3. Start a Discussion -->
+        <a href="<?php echo esc_url( home_url( '/forum/?action=new-topic' ) ); ?>" class="hs-sheet-item" onclick="closeHsCreateSheet()">
+            <span class="hs-sheet-icon">💬</span>
+            <div class="hs-sheet-text">
+                <h4>Start a Discussion</h4>
+                <p>Exchange ideas, discuss technology news, and connect</p>
+            </div>
+        </a>
+
+        <!-- 4. Submit a Tool -->
+        <a href="<?php echo esc_url( home_url( '/tools/?action=submit' ) ); ?>" class="hs-sheet-item" onclick="closeHsCreateSheet()">
+            <span class="hs-sheet-icon">⚡</span>
+            <div class="hs-sheet-text">
+                <h4>Submit a Tool</h4>
+                <p>Add a client-side security or developer tool to 2,024+ directory</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+function openHsCreateSheet(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    var sheet = document.getElementById('hs-create-action-sheet');
+    var backdrop = document.getElementById('hs-create-sheet-backdrop');
+    if (sheet && backdrop) {
+        backdrop.style.display = 'block';
+        sheet.style.display = 'block';
+        setTimeout(function() {
+            sheet.classList.add('is-open');
+        }, 10);
     }
 }
-</style>
+
+function closeHsCreateSheet() {
+    var sheet = document.getElementById('hs-create-action-sheet');
+    var backdrop = document.getElementById('hs-create-sheet-backdrop');
+    if (sheet && backdrop) {
+        sheet.classList.remove('is-open');
+        setTimeout(function() {
+            sheet.style.display = 'none';
+            backdrop.style.display = 'none';
+        }, 300);
+    }
+}
+</script>

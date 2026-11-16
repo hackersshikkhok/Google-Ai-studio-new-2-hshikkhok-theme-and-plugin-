@@ -56,7 +56,7 @@ final class CTF_Engine {
                 return array(
                     'allowed'   => false,
                     'cooldown'  => $remaining,
-                    'message'   => "⚠️       ।   {$remaining}   ।",
+                    'message'   => "⚠️ Rate limit active. Please wait {$remaining} seconds before trying again.",
                 );
             }
         }
@@ -82,7 +82,7 @@ final class CTF_Engine {
             return array(
                 'allowed'   => false,
                 'cooldown'  => $cooldown_secs,
-                'message'   => "⛔ -  ! {$cooldown_secs}     ।",
+                'message'   => "⛔ Too many failed attempts! Locked for {$cooldown_secs} seconds.",
             );
         }
 
@@ -133,19 +133,80 @@ final class CTF_Engine {
             $submissions_table = $wpdb->prefix . 'hs_ctf_submissions';
         }
 
-        $flag_row = $wpdb->get_row(
-            $wpdb->prepare( "SELECT * FROM {$flags_table} WHERE id = %d LIMIT 1", $flag_id ),
-            ARRAY_A
-        );
-
-        if ( ! $flag_row ) {
-            return array(
-                'success' => false,
-                'message' => '❌ Invalid challenge ID. Flag record not found.',
+        $flag_row = null;
+        if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $flags_table ) ) === $flags_table ) {
+            $flag_row = $wpdb->get_row(
+                $wpdb->prepare( "SELECT * FROM {$flags_table} WHERE id = %d LIMIT 1", $flag_id ),
+                ARRAY_A
             );
         }
 
         $clean_flag = trim( $submitted_flag );
+
+        // Fallback server-side challenge validation when DB table has not yet been seeded
+        if ( ! $flag_row ) {
+            $server_hashes = array(
+                // sha256('FLAG{hs_priv_esc_root_2026}|hs_ctf_salt')
+                hash( 'sha256', 'FLAG{hs_priv_esc_root_2026}|hs_ctf_salt' ) => array(
+                    'title' => 'Privilege Escalation & Root Flag Challenge',
+                    'xp'    => 150,
+                    'bdt'   => 10.00,
+                ),
+                hash( 'sha256', 'HS{PRePARED_STaTEMENTS_PrOTECT_ALL_2026}|hs_ctf_salt' ) => array(
+                    'title' => 'SQLi Prepared Statement Mitigation Challenge',
+                    'xp'    => 150,
+                    'bdt'   => 10.00,
+                ),
+            );
+            $submitted_hash = hash( 'sha256', $clean_flag . '|hs_ctf_salt' );
+            $matched_spec   = null;
+            foreach ( $server_hashes as $expected => $spec ) {
+                if ( hash_equals( $expected, $submitted_hash ) ) {
+                    $matched_spec = $spec;
+                    break;
+                }
+            }
+            self::record_attempt( $ip, $target_user_id, null !== $matched_spec );
+            if ( null === $matched_spec ) {
+                return array(
+                    'success'    => false,
+                    'is_correct' => false,
+                    'message'    => '❌ Incorrect flag! Inspect the sandbox terminal or type "hint" for a clue.',
+                );
+            }
+            $solved_list = get_user_meta( $target_user_id, '_hs_solved_ctf_flags', true );
+            $solved_list = is_array( $solved_list ) ? $solved_list : array();
+            if ( in_array( $submitted_hash, $solved_list, true ) ) {
+                return array(
+                    'success'        => true,
+                    'is_correct'     => true,
+                    'already_solved' => true,
+                    'message'        => '🎉 Already solved! You have previously claimed the reward for this challenge.',
+                    'xp_awarded'     => 0,
+                    'bdt_awarded'    => 0.00,
+                );
+            }
+            $solved_list[] = $submitted_hash;
+            update_user_meta( $target_user_id, '_hs_solved_ctf_flags', $solved_list );
+            \HackersShikkhok\Theme\Modules\Platform\UserEcosystem::record_ledger_transaction(
+                $target_user_id,
+                'bounty',
+                (float) $matched_spec['bdt'],
+                (int) $matched_spec['xp'],
+                'CTF Challenge Solved: ' . $matched_spec['title'],
+                'CTF-' . substr( $submitted_hash, 0, 10 )
+            );
+            return array(
+                'success'        => true,
+                'is_correct'     => true,
+                'already_solved' => false,
+                'message'        => sprintf( '🎯 Flag verified! +%d XP & BDT %.2f credited to your wallet!', $matched_spec['xp'], $matched_spec['bdt'] ),
+                'xp_awarded'     => (int) $matched_spec['xp'],
+                'bdt_awarded'    => (float) $matched_spec['bdt'],
+                'challenge'      => $matched_spec['title'],
+            );
+        }
+
         $submitted_hash = hash( 'sha256', $clean_flag . ( $flag_row['flag_salt'] ?? 'hs_ctf_salt' ) );
         $expected_hash  = $flag_row['flag_hash'];
 
@@ -183,7 +244,7 @@ final class CTF_Engine {
             return array(
                 'success'    => false,
                 'is_correct' => false,
-                'message'    => '❌  !       "hint"   ।',
+                'message'    => '❌ Incorrect flag! Inspect the terminal logs or type "hint" for guidance.',
             );
         }
 
@@ -195,7 +256,7 @@ final class CTF_Engine {
                 'success'        => true,
                 'is_correct'     => true,
                 'already_solved' => true,
-                'message'        => '🎉  !       ।',
+                'message'        => '🎉 Already verified! You have already claimed the bounty for this challenge.',
                 'xp_awarded'     => 0,
                 'bdt_awarded'    => 0.00,
             );
@@ -234,7 +295,7 @@ final class CTF_Engine {
             'success'        => true,
             'is_correct'     => true,
             'already_solved' => false,
-            'message'        => sprintf( '🎯 !   ।  +%d XP  %.2f BDT   !', $xp_reward, $bdt_reward ),
+            'message'        => sprintf( '🎯 Flag verified! +%d XP & BDT %.2f credited to your wallet!', $xp_reward, $bdt_reward ),
             'xp_awarded'     => $xp_reward,
             'bdt_awarded'    => $bdt_reward,
             'challenge'      => $flag_row['challenge_title'],
@@ -342,17 +403,23 @@ final class CTF_Engine {
             case 'help':
                 return array(
                     'status' => 'success',
-                    'output' => " доступные команды [Available Sandbox Commands]:\n" .
-                                "  • help             - Show available terminal commands\n" .
-                                "  • scan <target>    - Perform defensive vulnerability & port inspection\n" .
-                                "  • analyze <file>   - Inspect HTTP headers, packet flow or request payload\n" .
-                                "  • exploit <vector> - Demonstrate sandboxed proof-of-concept mitigation\n" .
-                                "  • submit-flag <flag> - Verify CTF flag token & claim bounty\n" .
-                                "  • status           - Display current cadet level, XP, and wallet balance\n" .
-                                "  • hint             - Request an educational clue for the current lesson\n" .
-                                "  • ls               - List files in current sandbox workspace\n" .
-                                "  • cat <file>       - Display contents of workspace file\n" .
-                                "  • clear            - Clear terminal buffer",
+                    'output' => "Available Sandbox Commands:\n" .
+                                "  • help              - Show available terminal commands\n" .
+                                "  • whoami            - Display current operative identity\n" .
+                                "  • scan <target>     - Perform defensive port & service audit\n" .
+                                "  • analyze <file>    - Inspect security configuration or log payload\n" .
+                                "  • exploit <vector>  - Evaluate sandboxed defensive mitigation\n" .
+                                "  • submit-flag <tok> - Verify CTF flag token & claim bounty\n" .
+                                "  • status            - Display cadet rank, XP, and wallet balance\n" .
+                                "  • hint              - Request an educational clue for the lab\n" .
+                                "  • ls / cat <file>   - List or read workspace files\n" .
+                                "  • clear             - Clear terminal buffer",
+                );
+
+            case 'whoami':
+                return array(
+                    'status' => 'success',
+                    'output' => 'operative@hackersshikkhok (UID: ' . ( $user_id ?: get_current_user_id() ?: 1001 ) . ') [Cyber Academy Sandbox]',
                 );
 
             case 'scan':
@@ -407,7 +474,7 @@ final class CTF_Engine {
                 if ( empty( $flag_input ) ) {
                     return array(
                         'status' => 'error',
-                        'output' => "❌ : submit-flag <HS{YOUR_FLAG_TOKEN}>\n: submit-flag HS{PRePARED_STaTEMENTS_PrOTECT_ALL_2026}",
+                        'output' => '❌ Usage: submit-flag <HS{YOUR_FLAG_TOKEN}> or FLAG{...}',
                     );
                 }
 
@@ -462,8 +529,8 @@ final class CTF_Engine {
             case 'hint':
                 return array(
                     'status' => 'info',
-                    'output' => "💡    :\n" .
-                                "    (Step 1 -> Step 2)  ।   prepared statements     । 'exploit sqli'    !",
+                    'output' => "💡 Lab Hint:\n" .
+                                "Follow the reconnaissance flow (Step 1 -> Step 2), inspect workspace files with 'ls' and 'cat flag.txt', or run 'exploit sqli' to test prepared statement defense.",
                 );
 
             case 'ls':
@@ -473,6 +540,7 @@ final class CTF_Engine {
                                 "-rw-r--r-- 1 cadet cyber  4096 Oct  9 10:00 app_firewall.py\n" .
                                 "-rw-r--r-- 1 cadet cyber  1820 Oct  9 10:02 jwt_validator.php\n" .
                                 "-rwxr-xr-x 1 cadet cyber   520 Oct  9 10:05 scan_defense.sh\n" .
+                                "-rw-r--r-- 1 cadet cyber    64 Oct  9 10:10 flag.txt\n" .
                                 "-rw-r--r-- 1 cadet cyber   128 Oct  9 10:10 flag_hint.txt",
                 );
 
@@ -482,6 +550,12 @@ final class CTF_Engine {
                     return array(
                         'status' => 'info',
                         'output' => "🔐 [flag_hint.txt]: Remember the core rule of ethical security — sanitize on input, escape on output, parameterize SQL queries.",
+                    );
+                }
+                if ( 'flag.txt' === $target || str_ends_with( $target, '/flag.txt' ) ) {
+                    return array(
+                        'status' => 'success',
+                        'output' => "FLAG{hs_priv_esc_root_2026}\n[+] Submit this token in the CTF Flag Verification box to claim your reward.",
                     );
                 }
                 return array(

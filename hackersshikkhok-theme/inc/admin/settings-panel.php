@@ -49,17 +49,29 @@ function hs_sanitize_master_settings( mixed $input ): array {
     $tab      = isset( $raw['_active_tab'] ) ? sanitize_key( (string) $raw['_active_tab'] ) : 'general';
 
     $tab_checkboxes = array(
-        'general'     => array( 'enable_ai_voice_reader', 'enable_stories_bar', 'enable_notifications_bell' ),
-        'modules'     => array(
+        'general'        => array(
+            'enable_ai_voice_reader', 'enable_stories_bar', 'enable_notifications_bell',
+            'home_show_hero_shortcuts', 'home_show_trending_slider', 'home_show_featured_notices',
+            'home_show_categories', 'home_show_latest_feed', 'home_show_popular_posts',
+            'home_show_qa_showcase', 'home_show_featured_tools', 'home_show_tools_gateway',
+            'home_show_academy_courses', 'home_show_tutorials', 'home_show_video_hub',
+            'home_show_community_leaderboard',
+        ),
+        'content_single' => array(
+            'enable_toc', 'enable_sticky_action_bar', 'enable_author_box',
+            'enable_related_posts', 'enable_code_copy_button', 'enable_report_modal',
+            'enable_mid_article_ad',
+        ),
+        'modules'        => array(
             'mod_tools_engine', 'mod_css_rgb_lab', 'mod_live_demo', 'mod_code_library',
             'mod_academy_lms', 'mod_ctf_engine', 'mod_wallet_economy', 'mod_post_pay_counter',
             'mod_community_social', 'mod_security_saas', 'mod_device_games_lab', 'mod_platform_centers',
             'mod_youtube', 'mod_github', 'mod_downloads', 'mod_user_submissions',
         ),
-        'ai'          => array( 'emergency_kill_switch', 'enable_ai_autopilot', 'enable_ai_tutor' ),
-        'seo'         => array( 'enable_schema_jsonld', 'enable_og_meta', 'enable_xml_sitemap', 'enable_auto_linking', 'enable_auto_ads_txt' ),
-        'security'    => array( 'enable_content_lock', 'enable_video_shield', 'enable_branded_auth', 'enable_branded_email', 'enable_passkey_geo' ),
-        'performance' => array( 'enable_transient_cache', 'conditional_assets_only', 'defer_non_critical_js', 'disable_wp_emojis' ),
+        'ai'             => array( 'emergency_kill_switch', 'enable_ai_autopilot', 'enable_ai_tutor' ),
+        'seo'            => array( 'enable_schema_jsonld', 'enable_og_meta', 'enable_xml_sitemap', 'enable_auto_linking', 'enable_auto_ads_txt' ),
+        'security'       => array( 'enable_content_lock', 'enable_video_shield', 'enable_branded_auth', 'enable_branded_email', 'enable_passkey_geo' ),
+        'performance'    => array( 'enable_transient_cache', 'conditional_assets_only', 'defer_non_critical_js', 'disable_wp_emojis' ),
     );
 
     $updated = $current;
@@ -71,7 +83,7 @@ function hs_sanitize_master_settings( mixed $input ): array {
 
     // Text, Select, Color & Numeric fields
     $text_fields = array(
-        'brand_name', 'brand_tagline', 'color_preset', 'featured_category',
+        'brand_name', 'brand_tagline', 'color_preset', 'header_search_position', 'featured_category', 'home_curated_post_ids',
         'autopilot_publishing_mode', 'gsc_verification_token', 'indexnow_api_key',
         'adsense_publisher_id', 'gemini_api_key', 'openai_api_key', 'claude_api_key',
     );
@@ -79,6 +91,26 @@ function hs_sanitize_master_settings( mixed $input ): array {
         if ( array_key_exists( $key, $raw ) ) {
             $updated[ $key ] = sanitize_text_field( wp_unslash( (string) $raw[ $key ] ) );
         }
+    }
+
+    if ( array_key_exists( 'home_section_order', $raw ) ) {
+        $allowed_sections = (array) ( $defaults['home_section_order'] ?? array() );
+        $raw_order = is_array( $raw['home_section_order'] )
+            ? $raw['home_section_order']
+            : explode( ',', (string) $raw['home_section_order'] );
+        $clean_order = array();
+        foreach ( $raw_order as $sec ) {
+            $sec_key = sanitize_key( (string) $sec );
+            if ( in_array( $sec_key, $allowed_sections, true ) && ! in_array( $sec_key, $clean_order, true ) ) {
+                $clean_order[] = $sec_key;
+            }
+        }
+        foreach ( $allowed_sections as $sec_key ) {
+            if ( ! in_array( $sec_key, $clean_order, true ) ) {
+                $clean_order[] = $sec_key;
+            }
+        }
+        $updated['home_section_order'] = $clean_order;
     }
 
     foreach ( array( 'primary_color', 'secondary_color', 'accent_color' ) as $color_key ) {
@@ -97,6 +129,11 @@ function hs_sanitize_master_settings( mixed $input ): array {
     $int_bounds = array(
         'popular_posts_count'    => array( 1, 24 ),
         'latest_posts_count'     => array( 1, 30 ),
+        'trending_posts_count'   => array( 1, 20 ),
+        'qa_showcase_count'      => array( 1, 12 ),
+        'academy_courses_count'  => array( 1, 12 ),
+        'tutorials_count'        => array( 1, 12 ),
+        'related_posts_count'    => array( 1, 9 ),
         'autopilot_min_quality'  => array( 50, 100 ),
         'autopilot_max_retries'  => array( 0, 5 ),
         'ai_daily_request_limit' => array( 10, 10000 ),
@@ -155,12 +192,13 @@ function hs_render_unified_settings_page(): void {
     }
 
     $tabs = array(
-        'general'     => '🎨 General & Homepage',
-        'modules'     => '🧩 Modules & Features',
-        'ai'          => '🤖 AI & API Keys',
-        'seo'         => '📡 SEO, Sitemaps & AdSense',
-        'security'    => '🛡️ Security, Auth & Limits',
-        'performance' => '⚡ Performance & Cache',
+        'general'        => '🎨 General & Homepage',
+        'content_single' => '📝 Single Post & Reading',
+        'modules'        => '🧩 Modules & Features',
+        'ai'             => '🤖 AI & API Keys',
+        'seo'            => '📡 SEO, Sitemaps & AdSense',
+        'security'       => '🛡️ Security, Auth & Limits',
+        'performance'    => '⚡ Performance & Cache',
     );
 
     $active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( (string) $_GET['tab'] ) ) : 'general';
@@ -209,7 +247,7 @@ function hs_render_unified_settings_page(): void {
 
             <?php if ( 'general' === $active_tab ) : ?>
                 <div class="hs-admin-card">
-                    <h2>Brand Identity, UI Colors &amp; Homepage Ranking</h2>
+                    <h2>Brand Identity, UI Colors &amp; Ranking Weights</h2>
                     <div class="hs-field-grid">
                         <div class="hs-field-box">
                             <label for="hs_brand_name">Brand Name</label>
@@ -226,6 +264,18 @@ function hs_render_unified_settings_page(): void {
                                     <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $s['color_preset'], $val ); ?>><?php echo esc_html( $lbl ); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="hs-field-box">
+                            <label for="hs_header_search_pos">Header Search Box Placement</label>
+                            <select id="hs_header_search_pos" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[header_search_position]">
+                                <?php foreach ( array(
+                                    'below_header' => 'Below Header Bar (Full-Width Voice Search)',
+                                    'top_inline'   => 'Top Header Bar Inline (Facebook-Style)',
+                                ) as $val => $lbl ) : ?>
+                                    <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $s['header_search_position'] ?? 'below_header', $val ); ?>><?php echo esc_html( $lbl ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small>Switch between compact top-bar search (like Facebook) or the dedicated bar below header.</small>
                         </div>
                         <div class="hs-field-box">
                             <label for="hs_primary_color">Primary Neon Color</label>
@@ -252,6 +302,22 @@ function hs_render_unified_settings_page(): void {
                             <input type="number" min="1" max="30" id="hs_latest_posts_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[latest_posts_count]" value="<?php echo esc_attr( (string) $s['latest_posts_count'] ); ?>" />
                         </div>
                         <div class="hs-field-box">
+                            <label for="hs_trending_posts_count">Trending Posts Slider Count</label>
+                            <input type="number" min="1" max="20" id="hs_trending_posts_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[trending_posts_count]" value="<?php echo esc_attr( (string) ( $s['trending_posts_count'] ?? 6 ) ); ?>" />
+                        </div>
+                        <div class="hs-field-box">
+                            <label for="hs_qa_showcase_count">Community Q&amp;A Count</label>
+                            <input type="number" min="1" max="12" id="hs_qa_showcase_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[qa_showcase_count]" value="<?php echo esc_attr( (string) ( $s['qa_showcase_count'] ?? 4 ) ); ?>" />
+                        </div>
+                        <div class="hs-field-box">
+                            <label for="hs_academy_courses_count">Academy Courses Count</label>
+                            <input type="number" min="1" max="12" id="hs_academy_courses_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[academy_courses_count]" value="<?php echo esc_attr( (string) ( $s['academy_courses_count'] ?? 4 ) ); ?>" />
+                        </div>
+                        <div class="hs-field-box">
+                            <label for="hs_tutorials_count">Latest Tutorials Count</label>
+                            <input type="number" min="1" max="12" id="hs_tutorials_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[tutorials_count]" value="<?php echo esc_attr( (string) ( $s['tutorials_count'] ?? 4 ) ); ?>" />
+                        </div>
+                        <div class="hs-field-box">
                             <label for="hs_w_likes">Popular Score Weight: Likes</label>
                             <input type="number" step="0.1" min="0" id="hs_w_likes" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[popular_weight_likes]" value="<?php echo esc_attr( (string) $s['popular_weight_likes'] ); ?>" />
                         </div>
@@ -264,11 +330,52 @@ function hs_render_unified_settings_page(): void {
                             <input type="number" step="0.1" min="0" id="hs_w_views" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[popular_weight_views]" value="<?php echo esc_attr( (string) $s['popular_weight_views'] ); ?>" />
                         </div>
                     </div>
+
+                    <h3 style="margin-top:24px; color:#00f5d4; font-size:16px;">Homepage Section Switches (4 Pillars Architecture)</h3>
                     <div class="hs-toggle-grid">
                         <?php
+                        hs_render_toggle_card( 'home_show_hero_shortcuts', '4 Core Pillars Hero Shortcuts', 'Shows the 4 main platform gateway cards (Content, Community, 2,000+ Tools, Academy) in the Hero.', $s );
+                        hs_render_toggle_card( 'home_show_trending_slider', 'Trending Posts Slider', 'Displays high-velocity horizontal trending posts carousel.', $s );
+                        hs_render_toggle_card( 'home_show_featured_notices', 'Featured Notices & Announcements', 'Shows admin-curated bulletins and priority editorial notices.', $s );
+                        hs_render_toggle_card( 'home_show_categories', 'Explore Categories & Disciplines', 'Shows multi-faculty technology discipline grid.', $s );
+                        hs_render_toggle_card( 'home_show_latest_feed', 'Latest Posts Feed & Filter Tabs', 'Displays chronological posts feed with category tabs.', $s );
+                        hs_render_toggle_card( 'home_show_popular_posts', 'Popular & High Engagement Posts', 'Shows engagement-weighted popular posts.', $s );
+                        hs_render_toggle_card( 'home_show_qa_showcase', 'Community Q&A Center Showcase', 'Shows recent questions, solved status, and Ask Question trigger.', $s );
+                        hs_render_toggle_card( 'home_show_featured_tools', 'Essential Featured Tools', 'Shows 1-click in-browser client-side security and developer tools.', $s );
+                        hs_render_toggle_card( 'home_show_tools_gateway', 'Explore 2,000+ Tools Gateway', 'Displays the full tools directory entry search & category gateway.', $s );
+                        hs_render_toggle_card( 'home_show_academy_courses', 'Featured Academy Courses', 'Shows LMS courses with syllabus, student rating, level, and enrollment CTA.', $s );
+                        hs_render_toggle_card( 'home_show_tutorials', 'Latest Tutorials & Guides', 'Shows in-depth technical guides with code snippet preview.', $s );
+                        hs_render_toggle_card( 'home_show_video_hub', 'Video Learning Center', 'Displays @HackersShikkhok video lessons & tutorials hub.', $s );
+                        hs_render_toggle_card( 'home_show_community_leaderboard', 'Top Contributors & Operative Ranks', 'Shows community leaderboard, badges, and top contributors.', $s );
                         hs_render_toggle_card( 'enable_ai_voice_reader', 'AI Voice Master Reader', 'Shows full-page speech synthesis bar in homepage hero.', $s );
-                        hs_render_toggle_card( 'enable_stories_bar', '24h Cyber Stories Bar', 'Displays ephemeral member stories bar in header.', $s );
+                        hs_render_toggle_card( 'enable_stories_bar', '24h Cyber Stories Bar', 'Displays ephemeral member stories bar in header on home page.', $s );
                         hs_render_toggle_card( 'enable_notifications_bell', 'Real-Time Notification Bell', 'Enables live AJAX notification drawer in header.', $s );
+                        ?>
+                    </div>
+                </div>
+
+            <?php elseif ( 'content_single' === $active_tab ) : ?>
+                <div class="hs-admin-card">
+                    <h2>Single Post &amp; Reading Experience Controls</h2>
+                    <p style="color:#94a3b8; font-size:13px; margin-bottom:18px;">Fine-tune single article cards, interactive table of contents, floating engagement buttons, author profiles, and AdSense placement.</p>
+                    
+                    <div class="hs-field-grid" style="margin-bottom:20px;">
+                        <div class="hs-field-box">
+                            <label for="hs_related_posts_count">Related Articles Count</label>
+                            <input type="number" min="1" max="9" id="hs_related_posts_count" name="<?php echo esc_attr( HS_MASTER_SETTINGS_OPTION ); ?>[related_posts_count]" value="<?php echo esc_attr( (string) ( $s['related_posts_count'] ?? 3 ) ); ?>" />
+                            <small>Recommended: 3 to 6 articles.</small>
+                        </div>
+                    </div>
+
+                    <div class="hs-toggle-grid">
+                        <?php
+                        hs_render_toggle_card( 'enable_toc', 'Interactive Table of Contents (ToC)', 'Automatically generates collapsible table of contents from article headings (H2, H3) with smooth scrolling.', $s );
+                        hs_render_toggle_card( 'enable_sticky_action_bar', 'Sticky / Floating Engagement Dock', 'Provides Like (❤️), Bookmark (🔖), Views (👁️), Comments (💬), Share (🔗), and Report (⚠️) actions.', $s );
+                        hs_render_toggle_card( 'enable_author_box', 'Author Profile Showcase Box', 'Displays author avatar, operative badge, bio, social profiles, and follow button below content.', $s );
+                        hs_render_toggle_card( 'enable_related_posts', 'Related Articles Recommendation Grid', 'Recommends contextually relevant articles based on categories and tags.', $s );
+                        hs_render_toggle_card( 'enable_code_copy_button', '1-Click Code Copy Button & Header', 'Enriches code blocks with programming language badge, terminal dots, and 1-click clipboard copy with feedback.', $s );
+                        hs_render_toggle_card( 'enable_report_modal', 'Content Report & Moderation Modal', 'Allows users to report spam, inaccurate information, or broken code directly to moderators.', $s );
+                        hs_render_toggle_card( 'enable_mid_article_ad', 'Mid-Article In-Content AdSense Slot', 'Injects a policy-compliant responsive AdSense display unit between paragraphs.', $s );
                         ?>
                     </div>
                 </div>

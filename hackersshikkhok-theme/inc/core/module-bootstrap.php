@@ -33,12 +33,14 @@ final class ModuleBootstrap {
             self::safe_boot( 'UniversalInteractionEngine', array( \HackersShikkhok\Theme\Modules\Community\UniversalInteractionEngine::class, 'register' ) );
             self::safe_boot( 'BookmarksAndNotifications', array( \HackersShikkhok\Theme\Modules\Community\BookmarksAndNotifications::class, 'register' ) );
             self::safe_boot( 'GamificationAndChallenges', array( \HackersShikkhok\Theme\Modules\Community\GamificationAndChallenges::class, 'register' ) );
+            self::safe_boot( 'ForumManager', array( \HackersShikkhok\Theme\Modules\Community\ForumManager::class, 'register' ) );
         }
 
         // 3. Tools, CSS/RGB Lab, Code Library & Live Demo (hook registration only; heavy registries lazy-load on demand)
         if ( hs_is_module_enabled( 'mod_tools_engine' ) ) {
             self::safe_boot( 'ToolsEngine', array( \HackersShikkhok\Theme\Modules\Tools\ToolsEngine::class, 'register' ) );
             self::safe_boot( 'AdvancedWebToolsSuite', array( \HackersShikkhok\Theme\Modules\Tools\AdvancedWebToolsSuite::class, 'register' ) );
+            self::safe_boot( 'ToolFactory', array( \HackersShikkhok\Theme\Modules\Tools\ToolFactory::class, 'register' ) );
         }
         if ( hs_is_module_enabled( 'mod_css_rgb_lab' ) ) {
             self::safe_boot( 'CssRgbLab', array( \HackersShikkhok\Theme\Modules\Tools\CssRgbLab::class, 'register' ) );

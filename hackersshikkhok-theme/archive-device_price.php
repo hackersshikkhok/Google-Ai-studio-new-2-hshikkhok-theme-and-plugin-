@@ -58,7 +58,7 @@ $brands = get_terms( array(
                 <?php while ( have_posts() ) : the_post(); 
                     $p_id = get_the_ID();
                     $dev_name   = get_post_meta( $p_id, '_hs_price_device_name', true ) ?: get_the_title();
-                    $price_bdt  = get_post_meta( $p_id, '_hs_price_bdt', true ) ?: '৳42,999';
+                    $price_bdt  = get_post_meta( $p_id, '_hs_price_bdt', true ) ?: 'BDT 42,999';
                     $price_type = get_post_meta( $p_id, '_hs_price_type', true ) ?: 'Official';
                     $avail      = get_post_meta( $p_id, '_hs_price_availability', true ) ?: 'In Stock';
                 ?>

@@ -1,125 +1,141 @@
 <?php
 /**
- * Professional Cyberpunk Search Box & AI Voice Speaker Template Part
- * HackersShikkhok Theme
+ * Slim Cyberpunk Voice-Input Command Search Box Template Part
+ * Supports both 'below_header' (default) and 'top_inline' (Facebook-style compact header mode).
+ * Brand: HackersShikkhok (https://hackersshikkhok.com)
  */
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$current_user_id = get_current_user_id();
-$saved_voice = get_user_meta( $current_user_id, 'hs_ai_voice', true ) ?: 'Ananya';
+$search_mode = ( isset( $args['mode'] ) && 'top_inline' === $args['mode'] ) ? 'top_inline' : 'below_header';
+$wrap_class  = 'top_inline' === $search_mode ? 'hs-search-box-wrapper hs-search-box-wrapper--inline' : 'hs-search-box-wrapper';
 ?>
-<div class="hs-search-box-wrapper" style="margin: 16px 0; position: relative;">
-    <form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="hs-search-form" style="display: flex; align-items: center; background: #0b1120; border: 1px solid rgba(0,245,212,0.35); border-radius: 14px; padding: 6px 10px; box-shadow: 0 0 20px rgba(0,245,212,0.15); transition: all 0.3s ease;">
-        
-        <div style="display: flex; align-items: center; padding-left: 10px; color: #00f5d4; font-size: 18px;">
-            🔍
-        </div>
+<div class="<?php echo esc_attr( $wrap_class ); ?>">
+    <form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="hs-search-form" id="hs-command-search-form">
+        <span class="hs-search-icon" aria-hidden="true">🔍</span>
 
-        <input type="search" name="s" value="<?php echo get_search_query(); ?>" placeholder="সার্চ করুন (Search tutorials, tools, CTF labs)..." class="hs-search-input" style="flex: 1; background: transparent; border: none; color: #ffffff; padding: 12px 14px; font-size: 14px; outline: none; font-family: inherit;" />
+        <input
+            type="search"
+            name="s"
+            id="hs-search-input-field"
+            value="<?php echo esc_attr( get_search_query() ); ?>"
+            placeholder="<?php echo esc_attr( 'top_inline' === $search_mode ? 'Search HackerShikkhok...' : 'Search courses, tools, commands, tutorials...' ); ?>"
+            class="hs-search-input"
+            aria-label="Search site"
+        />
 
-        <!-- AI Voice Speaker Reader Button -->
-        <div class="hs-speaker-container" style="position: relative; display: inline-flex; align-items: center; margin-right: 6px;">
-            <button type="button" id="hs-speaker-btn" class="hs-speaker-btn" title="AI Voice Reader (Listen to Page/Search)" data-voice="<?php echo esc_attr( $saved_voice ); ?>" style="background: linear-gradient(135deg, rgba(0,245,212,0.2), rgba(123,44,191,0.25)); border: 1px solid rgba(0,245,212,0.5); color: #00f5d4; padding: 8px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 12px; transition: all 0.2s;">
-                <span class="hs-speaker-icon" style="font-size: 16px;">🔊</span>
-                <span class="hs-desktop-only">স্পিকার (<span id="hs-active-voice-label"><?php echo esc_html( $saved_voice ); ?></span>)</span>
-                <!-- Soundwave Animation Bars (hidden by default, active when reading) -->
-                <span class="hs-soundwave" id="hs-soundwave" style="display: none; align-items: center; gap: 2px; height: 14px;">
-                    <span class="hs-bar-w"></span>
-                    <span class="hs-bar-w"></span>
-                    <span class="hs-bar-w"></span>
-                    <span class="hs-bar-w"></span>
-                </span>
-            </button>
-        </div>
+        <!-- Interactive Voice Search Input (Speech-to-Text Mic inside Search Box) -->
+        <button
+            type="button"
+            id="hs-voice-search-btn"
+            class="hs-speaker-btn hs-voice-mic-btn"
+            title="Voice Search (Speak to search)"
+            aria-label="Voice Search"
+            aria-pressed="false"
+        >
+            <svg class="hs-voice-mic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            <span class="hs-soundwave" id="hs-soundwave" aria-hidden="true">
+                <span class="hs-bar-w"></span>
+                <span class="hs-bar-w"></span>
+                <span class="hs-bar-w"></span>
+            </span>
+        </button>
 
-        <button type="submit" class="hs-search-submit-btn" style="background: linear-gradient(135deg, #00f5d4, #00bbf9); color: #050811; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 0 15px rgba(0,245,212,0.3); transition: all 0.2s;">
-            খুঁজুন ➔
+        <button type="submit" class="hs-search-submit-btn hs-tap-red">
+            Search
         </button>
     </form>
 </div>
 
-<style>
-.hs-search-form:focus-within {
-    border-color: #00f5d4;
-    box-shadow: 0 0 30px rgba(0,245,212,0.35);
-}
-.hs-speaker-btn:hover {
-    background: linear-gradient(135deg, rgba(0,245,212,0.35), rgba(123,44,191,0.4));
-    box-shadow: 0 0 15px rgba(0,245,212,0.4);
-}
-/* Soundwave Animation */
-.hs-soundwave .hs-bar-w {
-    display: inline-block;
-    width: 3px;
-    height: 10px;
-    background: #00f5d4;
-    border-radius: 2px;
-    animation: hsWaveAnim 0.6s infinite ease-in-out alternate;
-}
-.hs-soundwave .hs-bar-w:nth-child(2) { animation-delay: 0.15s; }
-.hs-soundwave .hs-bar-w:nth-child(3) { animation-delay: 0.3s; }
-.hs-soundwave .hs-bar-w:nth-child(4) { animation-delay: 0.45s; }
-
-@keyframes hsWaveAnim {
-    0% { height: 4px; background: #00f5d4; }
-    100% { height: 16px; background: #ff007f; box-shadow: 0 0 8px #ff007f; }
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const speakerBtn = document.getElementById('hs-speaker-btn');
-    const soundwave = document.getElementById('hs-soundwave');
-    const searchInput = document.querySelector('.hs-search-input');
-    
-    if (speakerBtn && 'speechSynthesis' in window) {
-        let isSpeaking = false;
-        let speechUtterance = null;
+    var micBtn = document.getElementById('hs-voice-search-btn');
+    var soundwave = document.getElementById('hs-soundwave');
+    var searchInput = document.getElementById('hs-search-input-field');
+    var searchForm = document.getElementById('hs-command-search-form');
+    var defaultPlaceholder = searchInput ? searchInput.getAttribute('placeholder') : 'Search courses, tools, commands, tutorials...';
 
-        speakerBtn.addEventListener('click', function() {
-            if (isSpeaking) {
-                window.speechSynthesis.cancel();
-                isSpeaking = false;
-                if (soundwave) soundwave.style.display = 'none';
-                speakerBtn.style.borderColor = 'rgba(0,245,212,0.5)';
-                return;
-            }
-
-            // Gather text from search input or page title / first paragraph
-            let textToRead = searchInput && searchInput.value.trim() !== '' 
-                ? "খুঁজছি: " + searchInput.value 
-                : (document.querySelector('h1') ? document.querySelector('h1').innerText : "স্বাগতম হ্যাকার শিক্ষক ডট কম এ।");
-
-            speechUtterance = new SpeechSynthesisUtterance(textToRead);
-            speechUtterance.rate = 1.0;
-            speechUtterance.pitch = 1.0;
-
-            // Pick voice based on persona
-            const voiceName = speakerBtn.getAttribute('data-voice') || 'Ananya';
-            const voices = window.speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                // Try matching Bengali or English voices
-                let selectedVoice = voices.find(v => v.lang.includes('bn') || v.lang.includes('en'));
-                if (selectedVoice) speechUtterance.voice = selectedVoice;
-            }
-
-            speechUtterance.onstart = function() {
-                isSpeaking = true;
-                if (soundwave) soundwave.style.display = 'inline-flex';
-                speakerBtn.style.borderColor = '#ff007f';
-            };
-
-            speechUtterance.onend = function() {
-                isSpeaking = false;
-                if (soundwave) soundwave.style.display = 'none';
-                speakerBtn.style.borderColor = 'rgba(0,245,212,0.5)';
-            };
-
-            window.speechSynthesis.speak(speechUtterance);
-        });
+    if (!micBtn || !searchInput || !searchForm) {
+        return;
     }
+
+    var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+        micBtn.addEventListener('click', function() {
+            searchInput.focus();
+            searchInput.placeholder = 'Voice input not supported in this browser. Type here...';
+            setTimeout(function() {
+                searchInput.placeholder = defaultPlaceholder;
+            }, 2600);
+        });
+        return;
+    }
+
+    var recognition = null;
+    var isListening = false;
+
+    function stopListeningState() {
+        isListening = false;
+        micBtn.classList.remove('is-speaking');
+        micBtn.setAttribute('aria-pressed', 'false');
+        if (soundwave) soundwave.classList.remove('is-playing');
+        searchInput.placeholder = defaultPlaceholder;
+    }
+
+    micBtn.addEventListener('click', function() {
+        if (isListening && recognition) {
+            recognition.stop();
+            stopListeningState();
+            return;
+        }
+
+        try {
+            recognition = new SpeechRec();
+            recognition.lang = 'en-US';
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = function() {
+                isListening = true;
+                micBtn.classList.add('is-speaking');
+                micBtn.setAttribute('aria-pressed', 'true');
+                if (soundwave) soundwave.classList.add('is-playing');
+                searchInput.placeholder = 'Listening... Speak now';
+                searchInput.focus();
+            };
+
+            recognition.onresult = function(event) {
+                var transcript = '';
+                for (var i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                searchInput.value = transcript.trim();
+                if (event.results[event.results.length - 1].isFinal && searchInput.value !== '') {
+                    stopListeningState();
+                    searchForm.submit();
+                }
+            };
+
+            recognition.onerror = function() {
+                stopListeningState();
+            };
+
+            recognition.onend = function() {
+                stopListeningState();
+            };
+
+            recognition.start();
+        } catch (err) {
+            stopListeningState();
+        }
+    });
 });
 </script>
-<?php

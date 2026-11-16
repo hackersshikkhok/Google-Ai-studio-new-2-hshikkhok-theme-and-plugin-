@@ -168,12 +168,60 @@ final class UserEcosystem {
 
     public static function register(): void {
         add_action( 'rest_api_init', array( self::class, 'register_rest_routes' ) );
+        add_filter( 'get_avatar_url', array( self::class, 'filter_custom_avatar_url' ), 10, 3 );
+    }
+
+    public static function filter_custom_avatar_url( string $url, mixed $id_or_email, array $args ): string {
+        $uid = 0;
+        if ( is_numeric( $id_or_email ) ) {
+            $uid = (int) $id_or_email;
+        } elseif ( $id_or_email instanceof \WP_User ) {
+            $uid = (int) $id_or_email->ID;
+        } elseif ( $id_or_email instanceof \WP_Comment && ! empty( $id_or_email->user_id ) ) {
+            $uid = (int) $id_or_email->user_id;
+        } elseif ( is_string( $id_or_email ) && str_contains( $id_or_email, '@' ) ) {
+            $u = get_user_by( 'email', $id_or_email );
+            if ( $u ) {
+                $uid = (int) $u->ID;
+            }
+        }
+        if ( $uid > 0 ) {
+            $custom = (string) get_user_meta( $uid, '_hs_custom_avatar_url', true );
+            if ( ! empty( $custom ) ) {
+                return esc_url_raw( $custom );
+            }
+        }
+        return $url;
     }
 
     public static function register_rest_routes(): void {
         register_rest_route( 'hackersshikkhok/v1', '/user/post/create', array(
             'methods'             => 'POST',
             'callback'            => array( self::class, 'rest_create_post' ),
+            'permission_callback' => static fn() => is_user_logged_in(),
+        ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/user/post/action', array(
+            'methods'             => 'POST',
+            'callback'            => array( self::class, 'rest_post_status_action' ),
+            'permission_callback' => static fn() => is_user_logged_in(),
+        ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/user/media/upload', array(
+            'methods'             => 'POST',
+            'callback'            => array( self::class, 'rest_upload_media' ),
+            'permission_callback' => static fn() => is_user_logged_in(),
+        ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/user/profile/media', array(
+            'methods'             => 'POST',
+            'callback'            => array( self::class, 'rest_upload_profile_media' ),
+            'permission_callback' => static fn() => is_user_logged_in(),
+        ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/user/profile/message', array(
+            'methods'             => 'POST',
+            'callback'            => array( self::class, 'rest_send_profile_message' ),
             'permission_callback' => static fn() => is_user_logged_in(),
         ) );
 
@@ -202,16 +250,65 @@ final class UserEcosystem {
         ) );
     }
 
-    public static function rest_create_post( \WP_REST_Request $request ): \WP_REST_Response {
-        $user_id = get_current_user_id();
-        $title   = sanitize_text_field( (string) $request->get_param( 'title' ) );
-        $content = wp_kses_post( (string) $request->get_param( 'content' ) );
-        $type    = sanitize_key( (string) $request->get_param( 'type' ) ?: 'tutorials' );
-        $status  = sanitize_key( (string) $request->get_param( 'status' ) ?: 'publish' );
-        $tags    = sanitize_text_field( (string) $request->get_param( 'tags' ) );
+    public static function rest_upload_media( \WP_REST_Request $request ): \WP_REST_Response {
+        $files = $request->get_file_params();
+        if ( empty( $files['file'] ) || empty( $files['file']['tmp_name'] ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'No image file provided.' ), 400 );
+        }
 
-        if ( empty( $title ) || empty( $content ) ) {
-            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Title and content cannot be empty.' ), 400 );
+        $file = $files['file'];
+        if ( (int) ( $file['size'] ?? 0 ) > 5 * 1024 * 1024 ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'File exceeds 5MB limit.' ), 400 );
+        }
+
+        $allowed = array( 'image/jpeg', 'image/png', 'image/webp', 'image/gif' );
+        $finfo   = function_exists( 'mime_content_type' ) ? (string) mime_content_type( $file['tmp_name'] ) : (string) ( $file['type'] ?? '' );
+        if ( ! in_array( $finfo, $allowed, true ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Only JPG, PNG, WebP, or GIF images are allowed.' ), 400 );
+        }
+
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        $attach_id = media_handle_sideload( $file, 0 );
+        if ( is_wp_error( $attach_id ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => $attach_id->get_error_message() ), 500 );
+        }
+
+        return new \WP_REST_Response( array(
+            'success'       => true,
+            'attachment_id' => (int) $attach_id,
+            'url'           => wp_get_attachment_url( (int) $attach_id ),
+        ) );
+    }
+
+    public static function rest_create_post( \WP_REST_Request $request ): \WP_REST_Response {
+        $user_id       = get_current_user_id();
+        $post_id       = (int) $request->get_param( 'post_id' );
+        $title         = sanitize_text_field( (string) $request->get_param( 'title' ) );
+        $slug          = sanitize_title( (string) $request->get_param( 'slug' ) );
+        $content       = wp_kses_post( (string) $request->get_param( 'content' ) );
+        $excerpt       = sanitize_textarea_field( (string) $request->get_param( 'excerpt' ) );
+        $type          = sanitize_key( (string) $request->get_param( 'type' ) ?: 'tutorials' );
+        $status        = sanitize_key( (string) $request->get_param( 'status' ) ?: 'publish' );
+        $tags          = sanitize_text_field( (string) $request->get_param( 'tags' ) );
+        $format        = sanitize_key( (string) $request->get_param( 'format' ) ?: 'standard' );
+        $focus_kw      = sanitize_text_field( (string) $request->get_param( 'focus_keyword' ) );
+        $thumb_id      = (int) $request->get_param( 'featured_image_id' );
+        $categories    = $request->get_param( 'categories' );
+
+        if ( 'trash' === $status && $post_id > 0 ) {
+            $existing = get_post( $post_id );
+            if ( $existing && ( (int) $existing->post_author === $user_id || current_user_can( 'delete_others_posts' ) ) ) {
+                wp_trash_post( $post_id );
+                return new \WP_REST_Response( array( 'success' => true, 'post_id' => $post_id, 'message' => 'Post moved to Trash.' ) );
+            }
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Permission denied to trash post.' ), 403 );
+        }
+
+        if ( empty( $title ) || empty( wp_strip_all_tags( $content ) ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Title and article body cannot be empty.' ), 400 );
         }
 
         $valid_types = array( 'tutorials', 'code', 'tools', 'device_review', 'device_price', 'tech_news', 'post' );
@@ -219,24 +316,76 @@ final class UserEcosystem {
             $type = 'tutorials';
         }
 
-        $pid = wp_insert_post( array(
+        $target_status = in_array( $status, array( 'draft', 'pending', 'publish' ), true ) ? $status : 'publish';
+
+        $post_args = array(
             'post_title'   => $title,
             'post_content' => $content,
-            'post_status'  => ( 'draft' === $status ) ? 'draft' : 'publish',
+            'post_excerpt' => $excerpt,
+            'post_status'  => $target_status,
             'post_type'    => $type,
-            'post_author'  => $user_id,
-        ) );
+        );
+        if ( ! empty( $slug ) ) {
+            $post_args['post_name'] = $slug;
+        }
+
+        if ( $post_id > 0 ) {
+            $existing = get_post( $post_id );
+            if ( ! $existing || ( (int) $existing->post_author !== $user_id && ! current_user_can( 'edit_others_posts' ) ) ) {
+                return new \WP_REST_Response( array( 'success' => false, 'message' => 'You do not have permission to edit this post.' ), 403 );
+            }
+            $post_args['ID'] = $post_id;
+            $pid = wp_update_post( $post_args, true );
+        } else {
+            $post_args['post_author'] = $user_id;
+            $pid = wp_insert_post( $post_args, true );
+        }
 
         if ( is_wp_error( $pid ) || ! $pid ) {
-            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Failed to save post.' ), 500 );
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Failed to save post to WordPress.' ), 500 );
         }
+
+        $pid = (int) $pid;
 
         if ( ! empty( $tags ) ) {
             wp_set_post_tags( $pid, $tags );
         }
 
-        // Award reward for publishing content
-        if ( 'publish' === $status ) {
+        if ( is_array( $categories ) && ! empty( $categories ) ) {
+            $cat_ids = array();
+            foreach ( $categories as $cat_val ) {
+                if ( is_numeric( $cat_val ) ) {
+                    $cat_ids[] = (int) $cat_val;
+                } else {
+                    $slug_c = sanitize_title( (string) $cat_val );
+                    $term   = get_category_by_slug( $slug_c );
+                    if ( $term ) {
+                        $cat_ids[] = (int) $term->term_id;
+                    } elseif ( '' !== $slug_c ) {
+                        $created = wp_insert_term( sanitize_text_field( (string) $cat_val ), 'category', array( 'slug' => $slug_c ) );
+                        if ( ! is_wp_error( $created ) && ! empty( $created['term_id'] ) ) {
+                            $cat_ids[] = (int) $created['term_id'];
+                        }
+                    }
+                }
+            }
+            if ( ! empty( $cat_ids ) ) {
+                wp_set_post_categories( $pid, $cat_ids );
+            }
+        }
+
+        if ( $thumb_id > 0 ) {
+            set_post_thumbnail( $pid, $thumb_id );
+        }
+        update_post_meta( $pid, '_hs_post_format', $format );
+        if ( '' !== $focus_kw ) {
+            update_post_meta( $pid, '_hs_focus_keyword', $focus_kw );
+        }
+
+        // Award reward once on first publish
+        $reward_msg = '';
+        if ( 'publish' === $target_status && ! get_post_meta( $pid, '_hs_publish_rewarded', true ) ) {
+            update_post_meta( $pid, '_hs_publish_rewarded', 1 );
             self::record_ledger_transaction(
                 $user_id,
                 'reward',
@@ -245,24 +394,30 @@ final class UserEcosystem {
                 'Reward for publishing new ' . $type . ': ' . $title,
                 'POST-' . $pid
             );
+            $reward_msg = ' +BDT 5.00 & +100 XP awarded!';
         }
 
         return new \WP_REST_Response( array(
             'success'   => true,
             'post_id'   => $pid,
+            'status'    => $target_status,
             'permalink' => get_permalink( $pid ),
-            'message'   => ( 'draft' === $status ) ? 'Post saved as draft!' : '✓ Post published successfully! +৳5.00 BDT & +100 XP awarded!',
+            'message'   => ( 'draft' === $target_status ) ? '✓ Post saved as draft!' : ( '✓ Post published successfully!' . $reward_msg ),
         ) );
     }
 
     public static function rest_create_question( \WP_REST_Request $request ): \WP_REST_Response {
-        $user_id  = get_current_user_id();
-        $title    = sanitize_text_field( (string) $request->get_param( 'title' ) );
-        $details  = wp_kses_post( (string) $request->get_param( 'details' ) );
-        $category = sanitize_text_field( (string) $request->get_param( 'category' ) ?: 'General Security' );
+        $user_id       = get_current_user_id();
+        $title         = sanitize_text_field( (string) $request->get_param( 'title' ) );
+        $details       = wp_kses_post( (string) $request->get_param( 'details' ) );
+        $category      = sanitize_text_field( (string) $request->get_param( 'category' ) ?: 'General Security' );
+        $question_type = sanitize_key( (string) $request->get_param( 'question_type' ) ?: 'question' );
+        if ( ! in_array( $question_type, array( 'question', 'discussion' ), true ) ) {
+            $question_type = 'question';
+        }
 
-        if ( empty( $title ) || empty( $details ) ) {
-            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Question title and details required.' ), 400 );
+        if ( empty( $title ) || empty( wp_strip_all_tags( $details ) ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Title and details are required.' ), 400 );
         }
 
         $qid = wp_insert_post( array(
@@ -274,20 +429,20 @@ final class UserEcosystem {
         ) );
 
         if ( is_wp_error( $qid ) || ! $qid ) {
-            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Failed to publish question.' ), 500 );
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Failed to publish topic.' ), 500 );
         }
 
         update_post_meta( $qid, '_hs_question_category', $category );
+        update_post_meta( $qid, '_hs_question_type', $question_type );
         update_post_meta( $qid, '_hs_question_votes', 1 );
 
-        // Award question reward
-        self::record_ledger_transaction( $user_id, 'reward', 2.00, 50, 'Asked tech question: ' . $title, 'Q-' . $qid );
+        self::record_ledger_transaction( $user_id, 'reward', 2.00, 50, 'Published community ' . $question_type . ': ' . $title, 'Q-' . $qid );
 
         return new \WP_REST_Response( array(
             'success'   => true,
             'post_id'   => $qid,
             'permalink' => get_permalink( $qid ),
-            'message'   => '✓ Question asked in forum! +৳2.00 BDT & +50 XP awarded!',
+            'message'   => ( 'discussion' === $question_type ? '✓ Discussion posted!' : '✓ Question asked in forum!' ) . ' +BDT 2.00 & +50 XP awarded!',
         ) );
     }
 
@@ -302,6 +457,7 @@ final class UserEcosystem {
         $linkedin = sanitize_text_field( (string) $request->get_param( 'linkedin' ) );
         $facebook = sanitize_text_field( (string) $request->get_param( 'facebook' ) );
         $twitter  = sanitize_text_field( (string) $request->get_param( 'twitter' ) );
+        $ai_voice = sanitize_text_field( (string) $request->get_param( 'ai_voice' ) );
 
         if ( ! empty( $name ) ) {
             wp_update_user( array( 'ID' => $user_id, 'display_name' => $name ) );
@@ -315,8 +471,188 @@ final class UserEcosystem {
         update_user_meta( $user_id, '_hs_social_linkedin', $linkedin );
         update_user_meta( $user_id, '_hs_social_facebook', $facebook );
         update_user_meta( $user_id, '_hs_social_twitter', $twitter );
+        if ( ! empty( $ai_voice ) ) {
+            update_user_meta( $user_id, 'hs_ai_voice', $ai_voice );
+            update_user_meta( $user_id, '_hs_tts_voice_model', $ai_voice );
+        }
 
-        return new \WP_REST_Response( array( 'success' => true, 'message' => '✓ Profile updated successfully!' ) );
+        // Extended Facebook-style profile fields (only overwrite when included in payload)
+        $extended_map = array(
+            'status_note'         => '_hs_profile_status_note',
+            'hometown'            => '_hs_user_hometown',
+            'relationship_status' => '_hs_user_relationship',
+            'birthday'            => '_hs_user_birthday',
+            'work_title'          => '_hs_work_title',
+            'work_company'        => '_hs_work_company',
+            'work_since'          => '_hs_work_since',
+            'education_school'    => '_hs_education_school',
+            'education_degree'    => '_hs_education_degree',
+            'education_year'      => '_hs_education_year',
+            'phone'               => '_hs_contact_phone',
+            'public_email'        => '_hs_contact_email',
+        );
+        foreach ( $extended_map as $param_key => $meta_key ) {
+            if ( null !== $request->get_param( $param_key ) ) {
+                $val = ( 'public_email' === $param_key )
+                    ? sanitize_email( (string) $request->get_param( $param_key ) )
+                    : sanitize_text_field( (string) $request->get_param( $param_key ) );
+                update_user_meta( $user_id, $meta_key, $val );
+            }
+        }
+
+        $privacy_in = $request->get_param( 'privacy_settings' );
+        if ( is_array( $privacy_in ) ) {
+            $existing_priv = get_user_meta( $user_id, '_hs_profile_privacy', true );
+            $existing_priv = is_array( $existing_priv ) ? $existing_priv : array();
+            $allowed_vis   = array( 'public', 'followers', 'private' );
+            foreach ( $privacy_in as $pkey => $pval ) {
+                $clean_k = sanitize_key( (string) $pkey );
+                $clean_v = sanitize_key( (string) $pval );
+                if ( in_array( $clean_v, $allowed_vis, true ) ) {
+                    $existing_priv[ $clean_k ] = $clean_v;
+                }
+            }
+            update_user_meta( $user_id, '_hs_profile_privacy', $existing_priv );
+        }
+
+        return new \WP_REST_Response( array( 'success' => true, 'message' => '✓ Profile & privacy settings updated!' ) );
+    }
+
+    public static function rest_upload_profile_media( \WP_REST_Request $request ): \WP_REST_Response {
+        $user_id    = get_current_user_id();
+        $media_type = sanitize_key( (string) ( $request->get_param( 'media_type' ) ?: 'avatar' ) );
+        if ( ! in_array( $media_type, array( 'avatar', 'cover' ), true ) ) {
+            $media_type = 'avatar';
+        }
+
+        $upload_res = self::rest_upload_media( $request );
+        $data       = $upload_res->get_data();
+        if ( empty( $data['success'] ) || empty( $data['url'] ) ) {
+            return $upload_res;
+        }
+
+        $meta_key = ( 'cover' === $media_type ) ? '_hs_cover_photo_url' : '_hs_custom_avatar_url';
+        update_user_meta( $user_id, $meta_key, esc_url_raw( (string) $data['url'] ) );
+
+        return new \WP_REST_Response( array(
+            'success'    => true,
+            'media_type' => $media_type,
+            'url'        => (string) $data['url'],
+            'message'    => ( 'cover' === $media_type ) ? '✓ Cover photo updated!' : '✓ Profile photo updated!',
+        ) );
+    }
+
+    public static function rest_send_profile_message( \WP_REST_Request $request ): \WP_REST_Response {
+        $sender_id    = get_current_user_id();
+        $recipient_id = (int) $request->get_param( 'recipient_id' );
+        $subject      = sanitize_text_field( (string) ( $request->get_param( 'subject' ) ?: 'Direct Message' ) );
+        $body         = sanitize_textarea_field( (string) $request->get_param( 'message' ) );
+
+        if ( $recipient_id <= 0 || $recipient_id === $sender_id || ! get_userdata( $recipient_id ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Invalid recipient operative.' ), 400 );
+        }
+        if ( empty( trim( $body ) ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Message cannot be empty.' ), 400 );
+        }
+
+        $sender = wp_get_current_user();
+        $sender_name = $sender->display_name ?: $sender->user_login;
+
+        $notis = get_user_meta( $recipient_id, '_hs_user_notifications', true );
+        if ( ! is_array( $notis ) ) {
+            $notis = array();
+        }
+        array_unshift( $notis, array(
+            'id'        => 'msg_' . wp_generate_uuid4(),
+            'icon'      => '💬',
+            'type'      => 'message',
+            'title'     => 'New message from ' . $sender_name,
+            'message'   => wp_trim_words( $body, 22, '...' ),
+            'body'      => $body,
+            'read'      => false,
+            'time_ago'  => 'Just now',
+            'timestamp' => gmdate( 'M d, Y H:i' ),
+            'url'       => get_author_posts_url( $sender_id ),
+        ) );
+        update_user_meta( $recipient_id, '_hs_user_notifications', array_slice( $notis, 0, 50 ) );
+
+        $inbox = get_user_meta( $recipient_id, '_hs_inbox_messages', true );
+        if ( ! is_array( $inbox ) ) {
+            $inbox = array();
+        }
+        array_unshift( $inbox, array(
+            'from_id'   => $sender_id,
+            'from_name' => $sender_name,
+            'subject'   => $subject,
+            'message'   => $body,
+            'sent_at'   => current_time( 'mysql' ),
+        ) );
+        update_user_meta( $recipient_id, '_hs_inbox_messages', array_slice( $inbox, 0, 50 ) );
+
+        return new \WP_REST_Response( array(
+            'success' => true,
+            'message' => '✓ Message sent! The operative will see it in their Notifications.',
+        ) );
+    }
+
+    public static function rest_post_status_action( \WP_REST_Request $request ): \WP_REST_Response {
+        $uid     = get_current_user_id();
+        $post_id = (int) $request->get_param( 'post_id' );
+        $action  = sanitize_key( (string) $request->get_param( 'action' ) );
+
+        if ( $post_id <= 0 ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Invalid post ID.' ), 400 );
+        }
+        $post = get_post( $post_id );
+        if ( ! $post || ( (int) $post->post_author !== $uid && ! current_user_can( 'edit_others_posts' ) ) ) {
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Permission denied.' ), 403 );
+        }
+
+        if ( 'trash' === $action ) {
+            wp_trash_post( $post_id );
+            return new \WP_REST_Response( array( 'success' => true, 'message' => 'Moved to Trash.' ) );
+        } elseif ( 'restore' === $action ) {
+            wp_untrash_post( $post_id );
+            wp_update_post( array( 'ID' => $post_id, 'post_status' => 'draft' ) );
+            return new \WP_REST_Response( array( 'success' => true, 'message' => 'Restored to Drafts!' ) );
+        } elseif ( 'publish' === $action ) {
+            wp_update_post( array( 'ID' => $post_id, 'post_status' => 'publish' ) );
+            return new \WP_REST_Response( array( 'success' => true, 'message' => 'Post published live!' ) );
+        } elseif ( 'delete_permanent' === $action ) {
+            wp_delete_post( $post_id, true );
+            return new \WP_REST_Response( array( 'success' => true, 'message' => 'Permanently deleted.' ) );
+        }
+
+        return new \WP_REST_Response( array( 'success' => false, 'message' => 'Unknown action.' ), 400 );
+    }
+
+    public static function get_default_privacy(): array {
+        return array(
+            'bio'          => 'public',
+            'location'     => 'public',
+            'hometown'     => 'public',
+            'relationship' => 'followers',
+            'birthday'     => 'followers',
+            'work'         => 'public',
+            'education'    => 'public',
+            'links'        => 'public',
+            'phone'        => 'private',
+            'email'        => 'private',
+        );
+    }
+
+    public static function can_view_field( int $owner_id, int $viewer_id, string $vis ): bool {
+        if ( $viewer_id > 0 && ( $viewer_id === $owner_id || user_can( $viewer_id, 'manage_options' ) ) ) {
+            return true;
+        }
+        if ( 'public' === $vis ) {
+            return true;
+        }
+        if ( 'followers' === $vis && $viewer_id > 0 ) {
+            $following = get_user_meta( $viewer_id, '_hs_following_ids', true );
+            return is_array( $following ) && in_array( $owner_id, array_map( 'intval', $following ), true );
+        }
+        return false;
     }
 
     public static function rest_request_withdraw( \WP_REST_Request $request ): \WP_REST_Response {
@@ -327,7 +663,7 @@ final class UserEcosystem {
 
         $wallet = self::get_wallet_summary( $user_id );
         if ( $amount < 100.0 ) {
-            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Minimum withdrawal amount is ৳100.00 BDT.' ), 400 );
+            return new \WP_REST_Response( array( 'success' => false, 'message' => 'Minimum withdrawal amount is BDT 100.00.' ), 400 );
         }
         if ( $amount > $wallet['balance_bdt'] ) {
             return new \WP_REST_Response( array( 'success' => false, 'message' => 'Insufficient wallet balance.' ), 400 );
@@ -336,7 +672,6 @@ final class UserEcosystem {
             return new \WP_REST_Response( array( 'success' => false, 'message' => 'Mobile wallet account number required.' ), 400 );
         }
 
-        // Debit ledger
         $tx = self::record_ledger_transaction(
             $user_id,
             'withdrawal',
@@ -348,7 +683,7 @@ final class UserEcosystem {
 
         return new \WP_REST_Response( array(
             'success' => true,
-            'message' => "✓ Withdrawal request of ৳{$amount} BDT submitted via {$method} ({$number}). It will be processed within 24 hours.",
+            'message' => "✓ Withdrawal request of BDT {$amount} submitted via {$method} ({$number}). It will be processed within 24 hours.",
             'balance' => $tx['new_balance'] ?? 0,
         ) );
     }
@@ -365,14 +700,14 @@ final class UserEcosystem {
         $following = is_array( $following ) ? $following : array();
 
         if ( in_array( $target_user, $following, true ) ) {
-            $following = array_diff( $following, array( $target_user ) );
+            $following = array_values( array_diff( $following, array( $target_user ) ) );
             $followed = false;
         } else {
             $following[] = $target_user;
             $followed = true;
         }
 
-        update_user_meta( $current_user, '_hs_following_ids', array_values( $following ) );
+        update_user_meta( $current_user, '_hs_following_ids', array_values( array_unique( array_map( 'intval', $following ) ) ) );
 
         return new \WP_REST_Response( array(
             'success'        => true,
@@ -396,14 +731,14 @@ final class UserEcosystem {
         if ( $posts_query->have_posts() ) {
             while ( $posts_query->have_posts() ) {
                 $posts_query->the_post();
-                $pid   = get_the_ID();
-                $views = (int) get_post_meta( $pid, '_hs_views_count', true );
+                $pid   = (int) get_the_ID();
+                $views = (int) get_post_meta( $pid, 'hs_views_count', true );
                 if ( 0 === $views ) {
-                    $views = rand( 140, 2450 ); // Initial realistic telemetry for presentation
+                    $views = (int) get_post_meta( $pid, '_hs_views_count', true );
                 }
-                $likes = (int) get_post_meta( $pid, '_hs_likes_count', true );
+                $likes = (int) get_post_meta( $pid, 'hs_likes_count', true );
                 if ( 0 === $likes ) {
-                    $likes = (int) round( $views * 0.08 );
+                    $likes = (int) get_post_meta( $pid, '_hs_likes_count', true );
                 }
 
                 $items[] = array(
@@ -414,7 +749,7 @@ final class UserEcosystem {
                     'date'      => get_the_date( 'M d, Y' ),
                     'views'     => $views,
                     'likes'     => $likes,
-                    'comments'  => get_comments_number(),
+                    'comments'  => (int) get_comments_number(),
                     'permalink' => get_permalink(),
                 );
             }

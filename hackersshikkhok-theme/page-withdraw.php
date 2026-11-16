@@ -32,61 +32,61 @@ $xp      = (int) ( $wallet['xp_points'] ?? 420 );
 $ledger_entries = array(
     array(
         'date'      => 'Today, 02:45 PM',
-        'reason'    => 'পোস্ট পাবলিশিং বোনাস: "OWASP Top 10 Web Vulnerability Guide"',
+        'reason'    => 'Article Publishing Bonus: "OWASP Top 10 Web Vulnerability Guide"',
         'category'  => 'Article Publishing',
         'ref_id'    => 'TXN-POST-9921',
         'xp'        => '+100 XP',
-        'amount'    => '+৳ 5.00 BDT',
+        'amount'    => '+BDT 5.00',
         'status'    => 'Deposited',
         'color'     => '#10b981',
     ),
     array(
         'date'      => 'Yesterday, 07:15 PM',
-        'reason'    => 'CTF ফ্ল্যাগ চ্যালেঞ্জ আনলক: "Linux Privilege Escalation SUID"',
+        'reason'    => 'CTF Flag Challenge Unlocked: "Linux Privilege Escalation SUID"',
         'category'  => 'CTF Lab Challenge',
         'ref_id'    => 'TXN-FLAG-4401',
         'xp'        => '+150 XP',
-        'amount'    => '+৳ 10.00 BDT',
+        'amount'    => '+BDT 10.00',
         'status'    => 'Deposited',
         'color'     => '#10b981',
     ),
     array(
         'date'      => 'Oct 19, 2026',
-        'reason'    => 'টুলস এক্সিকিউশন ও রিসার্চ: "Cryptographic Hash Matrix"',
+        'reason'    => 'Tools Execution & Research: "Cryptographic Hash Matrix"',
         'category'  => 'Tools Research',
         'ref_id'    => 'TXN-TOOL-8812',
         'xp'        => '+50 XP',
-        'amount'    => '+৳ 1.50 BDT',
+        'amount'    => '+BDT 1.50',
         'status'    => 'Deposited',
         'color'     => '#10b981',
     ),
     array(
         'date'      => 'Oct 18, 2026',
-        'reason'    => 'কিউ অ্যান্ড এ সঠিক উত্তর গ্রহণ: "Bypass CORS issue during REST API testing"',
+        'reason'    => 'Q&A Accepted Solution: "Bypass CORS issue during REST API testing"',
         'category'  => 'Q&A Solution',
         'ref_id'    => 'TXN-QA-3310',
         'xp'        => '+50 XP',
-        'amount'    => '+৳ 2.00 BDT',
+        'amount'    => '+BDT 2.00',
         'status'    => 'Deposited',
         'color'     => '#10b981',
     ),
     array(
         'date'      => 'Oct 17, 2026',
-        'reason'    => 'কমিউনিটি ডিসকাশন ও কমেন্ট বোনাস: "Python for Hackers"',
+        'reason'    => 'Community Discussion & Comment Bonus: "Python for Hackers"',
         'category'  => 'Comment Activity',
         'ref_id'    => 'TXN-COMM-1129',
         'xp'        => '+20 XP',
-        'amount'    => '+৳ 0.50 BDT',
+        'amount'    => '+BDT 0.50',
         'status'    => 'Deposited',
         'color'     => '#10b981',
     ),
     array(
         'date'      => 'Oct 15, 2026',
-        'reason'    => 'স্বাগতম অপরেটিভ সাইনআপ বোনাস (Welcome Bonus)',
+        'reason'    => 'Welcome Operative Signup Bonus',
         'category'  => 'Account Initiation',
         'ref_id'    => 'TXN-INIT-0001',
         'xp'        => '+200 XP',
-        'amount'    => '+৳ 50.00 BDT',
+        'amount'    => '+BDT 50.00',
         'status'    => 'Verified',
         'color'     => '#00f5d4',
     ),
@@ -113,10 +113,10 @@ $ledger_entries = array(
                         💳 TRANSPARENT EARNINGS &amp; REWARD SYSTEM
                     </div>
                     <h1 style="font-size:clamp(1.8rem, 4vw, 2.5rem); font-weight:900; margin:0 0 8px; color:#ffffff; line-height:1.2;">
-                        সাইবার ওয়ালেট ও ক্যাশআউট পোর্টাল
+                        Cyber Wallet &amp; Cashout Portal
                     </h1>
                     <p style="color:#94a3b8; font-size:14px; margin:0; max-width:700px; line-height:1.6;">
-                        HackersShikkhok এ আপনার প্রতিটি কাজের জন্য আলাদা আলাদা ব্যালেন্স ও পয়েন্ট যোগ হয়। এখানে সম্পূর্ণ বিস্তারিত হিসাব ও সরাসরি বিকাশ/নগদ উত্তোলনের সুবিধা রয়েছে।
+                        Every verified contribution on HackersShikkhok credits BDT rewards and Scholar XP points to your ledger. View your complete history and withdraw directly via bKash or Nagad.
                     </p>
                 </div>
 
@@ -124,7 +124,7 @@ $ledger_entries = array(
                 <div style="background:#06080d; border:1px solid rgba(0,245,212,0.4); border-radius:16px; padding:20px 24px; text-align:right;">
                     <div style="font-size:12px; color:#94a3b8; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Available Balance</div>
                     <div style="font-size:2.2rem; font-weight:900; color:#00f5d4; font-family:var(--font-mono); line-height:1;">
-                        ৳ <?php echo number_format( $balance, 2 ); ?> <span style="font-size:14px; color:#94a3b8;">BDT</span>
+                        BDT <?php echo number_format( $balance, 2 ); ?>
                     </div>
                     <div style="font-size:12px; color:#c084fc; font-weight:700; margin-top:6px; font-family:var(--font-mono);">
                         ⚡ <?php echo number_format( (float) $xp ); ?> Scholar XP Points
@@ -141,7 +141,7 @@ $ledger_entries = array(
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
                     <span style="font-size:26px;">💸</span>
                     <div>
-                        <h2 style="color:#ffffff; font-size:1.25rem; font-weight:800; margin:0;">ক্যাশআউট রিকোয়েস্ট</h2>
+                        <h2 style="color:#ffffff; font-size:1.25rem; font-weight:800; margin:0;">Cashout Request</h2>
                         <span style="font-size:11px; color:#10b981; font-weight:700;">bKash / Nagad / Rocket Personal</span>
                     </div>
                 </div>
@@ -150,17 +150,17 @@ $ledger_entries = array(
 
                 <form id="hs-payout-form" style="display:flex; flex-direction:column; gap:16px;">
                     <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">পেমেন্ট মেথড নির্বাচন করুন:</label>
+                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Select Payment Method:</label>
                         <select id="hs-method" style="width:100%; box-sizing:border-box; background:#06080d; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:11px 14px; border-radius:8px; font-size:13px;">
-                            <option value="bKash">bKash (বিকাশ পার্সোনাল)</option>
-                            <option value="Nagad">Nagad (নগদ পার্সোনাল)</option>
-                            <option value="Rocket">Rocket (রকেট পার্সোনাল)</option>
-                            <option value="Upay">Upay (উপায় পার্সোনাল)</option>
+                            <option value="bKash">bKash (Personal)</option>
+                            <option value="Nagad">Nagad (Personal)</option>
+                            <option value="Rocket">Rocket (Personal)</option>
+                            <option value="Upay">Upay (Personal)</option>
                         </select>
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">অ্যাকাউন্ট টাইপ:</label>
+                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Account Type:</label>
                         <div style="display:flex; gap:12px; font-size:13px;">
                             <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
                                 <input type="radio" name="acc_type" value="personal" checked /> Personal
@@ -172,34 +172,34 @@ $ledger_entries = array(
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">১১ ডিজিট মোবাইল ওয়ালেট নম্বর:</label>
+                        <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">11-Digit Mobile Wallet Number:</label>
                         <input type="tel" id="hs-phone" placeholder="017XXXXXXXX" pattern="01[3-9][0-9]{8}" required
                                style="width:100%; box-sizing:border-box; background:#06080d; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:11px 14px; border-radius:8px; font-size:14px; font-family:var(--font-mono);" />
                     </div>
 
                     <div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label style="font-size:12px; font-weight:700; color:#cbd5e1;">উত্তোলনের পরিমাণ (BDT):</label>
-                            <span style="font-size:11px; color:#94a3b8;">মিনিমাম ৳১০০</span>
+                            <label style="font-size:12px; font-weight:700; color:#cbd5e1;">Withdrawal Amount (BDT):</label>
+                            <span style="font-size:11px; color:#94a3b8;">Minimum BDT 100</span>
                         </div>
                         <input type="number" id="hs-amount" min="100" max="50000" value="100" required
                                style="width:100%; box-sizing:border-box; background:#06080d; border:1px solid rgba(0,245,212,0.35); color:#00f5d4; font-size:18px; font-weight:800; padding:10px 14px; border-radius:8px; font-family:var(--font-mono);" />
                         
                         <!-- Quick Amount Select Chips -->
                         <div style="display:flex; gap:6px; margin-top:8px;">
-                            <button type="button" class="hs-quick-amt" data-amt="100" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">৳১০০</button>
-                            <button type="button" class="hs-quick-amt" data-amt="250" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">৳২৫০</button>
-                            <button type="button" class="hs-quick-amt" data-amt="500" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">৳৫০০</button>
-                            <button type="button" class="hs-quick-amt" data-amt="<?php echo (int) $balance; ?>" style="flex:1; background:rgba(0,245,212,0.15); border:1px solid #00f5d4; color:#00f5d4; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">সব ব্যালেন্স</button>
+                            <button type="button" class="hs-quick-amt" data-amt="100" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">BDT 100</button>
+                            <button type="button" class="hs-quick-amt" data-amt="250" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">BDT 250</button>
+                            <button type="button" class="hs-quick-amt" data-amt="500" style="flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:#cbd5e1; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">BDT 500</button>
+                            <button type="button" class="hs-quick-amt" data-amt="<?php echo (int) $balance; ?>" style="flex:1; background:rgba(0,245,212,0.15); border:1px solid #00f5d4; color:#00f5d4; font-size:11px; padding:4px 0; border-radius:4px; cursor:pointer;">Max</button>
                         </div>
                     </div>
 
                     <button type="submit" style="background:linear-gradient(90deg, #10b981, #00f5d4); color:#050811; border:none; padding:14px; border-radius:10px; font-weight:900; font-size:14px; cursor:pointer; box-shadow:0 0 20px rgba(16,185,129,0.35); transition:transform 0.2s; margin-top:6px;">
-                        উত্তোলন সাবমিট করুন ➔
+                        Submit Cashout Request ➔
                     </button>
                     
                     <div style="font-size:11px; color:#64748b; line-height:1.5; text-align:center;">
-                        🔒 রিকোয়েস্ট সাবমিটের পর স্বয়ংক্রিয়ভাবে ট্রানজ্যাকশন আইডি ও রসিদ তৈরি হবে। সাধারণ ক্যাশআউট সর্বোচ্চ ১২-২৪ ঘণ্টার মধ্যে প্রসেস হয়।
+                        🔒 A cryptographic transaction ID and receipt are generated immediately after submission. Standard payouts process within 12–24 hours.
                     </div>
                 </form>
             </div>
@@ -209,10 +209,10 @@ $ledger_entries = array(
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
                     <div>
                         <h2 style="color:#ffffff; font-size:1.3rem; font-weight:800; margin:0 0 4px;">
-                            📋 স্বচ্ছ আর্নিং ও পয়েন্ট লেজার হিস্টোরি
+                            📋 Earnings &amp; Points Ledger History
                         </h2>
                         <p style="color:#94a3b8; font-size:13px; margin:0;">
-                            কি জন্য কত টাকা ও কত পয়েন্ট জমা হয়েছে তার সম্পূর্ণ তালিকা:
+                            Complete breakdown of BDT earnings and XP credits per verified activity:
                         </p>
                     </div>
                     <span style="font-size:11px; font-family:var(--font-mono); color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px; border:1px solid rgba(16,185,129,0.3);">
@@ -225,12 +225,12 @@ $ledger_entries = array(
                     <table style="width:100%; border-collapse:collapse; font-size:13px;">
                         <thead>
                             <tr style="border-bottom:1px solid rgba(255,255,255,0.1); color:#94a3b8; text-align:left;">
-                                <th style="padding:12px 10px;">তারিখ</th>
-                                <th style="padding:12px 10px;">কারণ / অ্যাক্টিভিটি বিবরণ</th>
-                                <th style="padding:12px 10px;">ট্রানজ্যাকশন ID</th>
-                                <th style="padding:12px 10px;">পয়েন্ট (XP)</th>
-                                <th style="padding:12px 10px;">অ্যামাউন্ট (BDT)</th>
-                                <th style="padding:12px 10px; text-align:right;">স্ট্যাটাস</th>
+                                <th style="padding:12px 10px;">Date</th>
+                                <th style="padding:12px 10px;">Activity Description</th>
+                                <th style="padding:12px 10px;">Transaction ID</th>
+                                <th style="padding:12px 10px;">Points (XP)</th>
+                                <th style="padding:12px 10px;">Amount (BDT)</th>
+                                <th style="padding:12px 10px; text-align:right;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -269,10 +269,10 @@ $ledger_entries = array(
 
                 <!-- Reward Rates Legend -->
                 <div style="margin-top:24px; padding:16px; background:#06080d; border-radius:12px; border:1px solid rgba(255,255,255,0.08); display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:12px;">
-                    <div>✍️ পোস্ট পাবলিশ: <strong style="color:#00f5d4;">+৳৫.০০</strong> (+১০০ XP)</div>
-                    <div>🚩 CTF ফ্ল্যাগ সলভ: <strong style="color:#00f5d4;">+৳১০.০০</strong> (+১৫০ XP)</div>
-                    <div>❓ সঠিক উত্তর: <strong style="color:#00f5d4;">+৳২.০০</strong> (+৫০ XP)</div>
-                    <div>⚡ টুলস রিসার্চ: <strong style="color:#00f5d4;">+৳১.৫০</strong> (+৫০ XP)</div>
+                    <div>✍️ Publish Article: <strong style="color:#00f5d4;">+BDT 5.00</strong> (+100 XP)</div>
+                    <div>🚩 Solve CTF Flag: <strong style="color:#00f5d4;">+BDT 10.00</strong> (+150 XP)</div>
+                    <div>❓ Accepted Answer: <strong style="color:#00f5d4;">+BDT 2.00</strong> (+50 XP)</div>
+                    <div>⚡ Tools Research: <strong style="color:#00f5d4;">+BDT 1.50</strong> (+50 XP)</div>
                 </div>
 
             </div>
@@ -312,7 +312,7 @@ $ledger_entries = array(
                     alertBox.style.background = 'rgba(239,68,68,0.15)';
                     alertBox.style.border = '1px solid #ef4444';
                     alertBox.style.color = '#ef4444';
-                    alertBox.textContent = 'অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (Please enter valid 11 digit mobile number).';
+                    alertBox.textContent = 'Please enter a valid 11-digit mobile wallet number.';
                 }
                 return;
             }
@@ -323,7 +323,7 @@ $ledger_entries = array(
                 alertBox.style.background = 'rgba(16,185,129,0.15)';
                 alertBox.style.border = '1px solid #10b981';
                 alertBox.style.color = '#10b981';
-                alertBox.innerHTML = '✓ আপনার ৳' + amount + ' BDT উত্তোলনের আবেদন সফল হয়েছে!<br>মেথড: <strong>' + method + ' (' + phone + ')</strong><br>ট্রানজ্যাকশন আইডি: <code>' + txnId + '</code><br>১২ ঘণ্টার মধ্যে আপনার একাউন্টে টাকা পৌছে যাবে।';
+                alertBox.innerHTML = '✓ Your BDT ' + amount + ' withdrawal request was submitted successfully!<br>Method: <strong>' + method + ' (' + phone + ')</strong><br>Transaction ID: <code>' + txnId + '</code><br>Your payout will be processed within 12–24 hours.';
             }
             form.reset();
         });

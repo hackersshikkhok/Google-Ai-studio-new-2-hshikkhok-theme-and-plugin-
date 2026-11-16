@@ -75,7 +75,31 @@ add_filter( 'template_include', static function ( string $template ): string {
         'post-new'           => 'page-new-post.php',
         'withdraw'           => 'page-withdraw.php',
         'cashout'            => 'page-withdraw.php',
+        'forum'              => 'archive-hs_question.php',
+        'forum-questions'    => 'archive-hs_question.php',
+        'questions'          => 'archive-hs_question.php',
+        'qa'                 => 'archive-hs_question.php',
+        'community'          => 'archive-hs_question.php',
+        'explore'            => 'page-platform-center.php',
+        'categories'         => 'category.php',
+        'tutorials'          => 'category.php',
+        'members'            => 'page-members.php',
+        'help-center'        => 'page-services.php',
+        'help'               => 'page-services.php',
     );
+
+    if ( 'profile' === $path || 'my-profile' === $path ) {
+        if ( is_user_logged_in() ) {
+            set_query_var( 'author', get_current_user_id() );
+            $cand = HS_THEME_DIR . '/author.php';
+            if ( file_exists( $cand ) ) {
+                return $cand;
+            }
+        } else {
+            wp_safe_redirect( wp_login_url( home_url( '/profile/' ) ) );
+            exit;
+        }
+    }
 
     if ( isset( $map[ $path ] ) ) {
         if ( 'tools' === $path && isset( $_GET['tool'] ) && ! empty( $_GET['tool'] ) ) {
@@ -105,6 +129,7 @@ add_filter( 'template_include', static function ( string $template ): string {
         'tech_news'     => 'single-tech_news.php',
         'tools'         => 'single-tools.php',
         'hs_course'     => 'single-hs_course.php',
+        'hs_question'   => 'single-hs_question.php',
     );
 
     foreach ( $singular_map as $cpt => $file ) {
@@ -142,6 +167,10 @@ add_filter( 'template_include', static function ( string $template ): string {
 
     if ( is_post_type_archive( 'hs_course' ) && file_exists( HS_THEME_DIR . '/archive-hs_course.php' ) ) {
         return HS_THEME_DIR . '/archive-hs_course.php';
+    }
+
+    if ( ( 'forum' === $path || str_starts_with( $path, 'forum/' ) || is_post_type_archive( 'hs_question' ) ) && file_exists( HS_THEME_DIR . '/archive-hs_question.php' ) ) {
+        return HS_THEME_DIR . '/archive-hs_question.php';
     }
 
     return $template;

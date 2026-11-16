@@ -57,6 +57,18 @@ final class CyberAcademyLmsEngine {
             'permission_callback' => static fn() => is_user_logged_in(),
             'callback'            => array( self::class, 'submit_assignment' ),
         ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/academy/notes', array(
+            'methods'             => 'GET',
+            'permission_callback' => static fn() => is_user_logged_in(),
+            'callback'            => array( self::class, 'rest_get_notes' ),
+        ) );
+
+        register_rest_route( 'hackersshikkhok/v1', '/academy/notes/sync', array(
+            'methods'             => 'POST',
+            'permission_callback' => static fn() => is_user_logged_in(),
+            'callback'            => array( self::class, 'rest_sync_notes' ),
+        ) );
     }
 
     private static function get_hmac_secret(): string {
@@ -111,7 +123,7 @@ final class CyberAcademyLmsEngine {
 
     public static function verify_certificate( WP_REST_Request $request ): WP_REST_Response {
         global $wpdb;
-        $cert_id = sanitize_text_field( (string) $request->get_param( 'cert_id' ) );
+        $cert_id = sanitize_text_field( (string) ( $request->get_param( 'cert_id' ) ?: $request->get_param( 'cert_code' ) ) );
         if ( empty( $cert_id ) ) {
             return new WP_REST_Response( array( 'valid' => false, 'error' => 'Certificate code is required' ), 400 );
         }
@@ -126,17 +138,15 @@ final class CyberAcademyLmsEngine {
             ), 404 );
         }
 
-        // Check if certificate has been revoked
         if ( 'revoked' === $cert['status'] ) {
             return new WP_REST_Response( array(
-                'valid'      => false,
-                'status'     => 'revoked',
-                'message'    => 'This certificate was revoked by the administration and is no longer valid.',
-                'cert_code'  => $cert['cert_code'],
+                'valid'     => false,
+                'status'    => 'revoked',
+                'message'   => 'This certificate was revoked by the administration and is no longer valid.',
+                'cert_code' => $cert['cert_code'],
             ), 200 );
         }
 
-        // Strict HMAC verification — NEVER match on empty stored signature!
         if ( empty( $cert['sha256_signature'] ) ) {
             return new WP_REST_Response( array(
                 'valid'   => false,
@@ -160,13 +170,49 @@ final class CyberAcademyLmsEngine {
         return new WP_REST_Response( array(
             'valid'                  => true,
             'cert_code'              => $cert['cert_code'],
+            'recipient'              => $cert['recipient_display_name'],
             'recipient_display_name' => $cert['recipient_display_name'],
+            'course_title'           => $cert['course_title_snapshot'],
             'course_title_snapshot'  => $cert['course_title_snapshot'],
             'level_label'            => $cert['level_label'],
             'issued_at'              => $cert['issued_at'],
             'status'                 => 'valid',
             'signature_verified'     => true,
             'issuer'                 => 'HackersShikkhok Cybersecurity Academy (HackersShikkhok.com)',
+        ), 200 );
+    }
+
+    public static function rest_get_notes( WP_REST_Request $request ): WP_REST_Response {
+        $user_id     = get_current_user_id();
+        $course_slug = sanitize_key( (string) $request->get_param( 'course_slug' ) );
+        $all_notes   = get_user_meta( $user_id, '_hs_academy_notes', true );
+        if ( ! is_array( $all_notes ) ) {
+            $all_notes = array();
+        }
+        return new WP_REST_Response( array(
+            'success'     => true,
+            'course_slug' => $course_slug,
+            'notes'       => $course_slug ? (string) ( $all_notes[ $course_slug ] ?? '' ) : $all_notes,
+        ), 200 );
+    }
+
+    public static function rest_sync_notes( WP_REST_Request $request ): WP_REST_Response {
+        $user_id     = get_current_user_id();
+        $course_slug = sanitize_key( (string) ( $request->get_param( 'course_slug' ) ?: 'general' ) );
+        $notes       = sanitize_textarea_field( (string) $request->get_param( 'notes' ) );
+
+        $all_notes = get_user_meta( $user_id, '_hs_academy_notes', true );
+        if ( ! is_array( $all_notes ) ) {
+            $all_notes = array();
+        }
+        $all_notes[ $course_slug ] = $notes;
+        update_user_meta( $user_id, '_hs_academy_notes', $all_notes );
+
+        return new WP_REST_Response( array(
+            'success'     => true,
+            'course_slug' => $course_slug,
+            'saved_at'    => gmdate( 'c' ),
+            'message'     => '✓ Notes synchronized securely to your account.',
         ), 200 );
     }
 

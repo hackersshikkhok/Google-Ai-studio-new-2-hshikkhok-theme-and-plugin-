@@ -82,7 +82,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'web-to-app',
                 'title'       => 'Web to Android APK Builder',
-                'title_bn'    => 'ওয়েব টু অ্যান্ড্রয়েড অ্যাপ বিল্ডার',
+                'title_bn'    => 'Web to Android APK Builder',
                 'description' => 'Convert any responsive website or URL into a standalone Android APK and AAB package with offline caching.',
                 'icon'        => '📱',
                 'badge'       => 'HOT',
@@ -93,7 +93,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'link-to-pwa',
                 'title'       => 'Progressive Web App (PWA) Studio',
-                'title_bn'    => 'প্রগ্রেসিভ ওয়েব অ্যাপ স্টুডিও',
+                'title_bn'    => 'Progressive Web App (PWA) Studio',
                 'description' => 'Generate installable PWA manifest, service workers, icon badges, and offline fallbacks with 1-click.',
                 'icon'        => '🌐',
                 'badge'       => 'PWA 3.0',
@@ -104,7 +104,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'card-maker',
                 'title'       => 'Cyber Greeting & Certificate Maker',
-                'title_bn'    => 'সাইবার গ্রিটিংস ও সোশ্যাল কার্ড মেকার',
+                'title_bn'    => 'Cyber Greeting & Certificate Maker',
                 'description' => 'Design vector cyber greeting cards, achievement badges, and cryptographic certificate cards.',
                 'icon'        => '🎴',
                 'badge'       => 'DESIGN',
@@ -115,7 +115,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'gift-maker',
                 'title'       => '3D Interactive Gift Box & CTF Mystery Unit',
-                'title_bn'    => '৩ডি ইন্টারঅ্যাক্টিভ গিফট ও রিওয়ার্ড বক্স',
+                'title_bn'    => '3D Interactive Gift Box & CTF Mystery Unit',
                 'description' => 'Create 3D interactive surprise units with embedded CTF flag puzzles, secret keys, and confetti bursts.',
                 'icon'        => '🎁',
                 'badge'       => 'REWARDS',
@@ -126,7 +126,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'game-maker',
                 'title'       => 'HTML5 Cyber Game & Canvas Sandbox',
-                'title_bn'    => 'এইচটিএমএল৫ সাইবার সিকিউরিটি গেম স্টুডিও',
+                'title_bn'    => 'HTML5 Cyber Game & Canvas Sandbox',
                 'description' => 'Build cipher breaker games, terminal hacking challenges, and memory defense games.',
                 'icon'        => '🕹️',
                 'badge'       => 'CANVAS',
@@ -137,7 +137,7 @@ class PlatformHubEngine {
             array(
                 'slug'        => 'command-matrix',
                 'title'       => 'Cyber Command Central Matrix',
-                'title_bn'    => 'সাইবার কমান্ড ও সিকিউরিটি অপারেশন মেট্রিক্স',
+                'title_bn'    => 'Cyber Command Central Matrix',
                 'description' => 'Live tactical security audit HUD, continuous website monitor, automated web auditor, and vulnerability ledger.',
                 'icon'        => '💻',
                 'badge'       => 'SAAS v2',

@@ -1,0 +1,1078 @@
+আপনাদের সিদ্ধান্ত অনুযায়ী আমি ওয়েবসাইটটিকে একটি All-in-One Technology Content, Community, Tools & Learning Platform হিসেবে ডিজাইন করার পরিকল্পনা করছি।
+
+এখানে সবচেয়ে গুরুত্বপূর্ণ বিষয় হলো, চারটি বিভাগই সমান গুরুত্ব পাবে। কোনো একটি বিভাগ যেন অন্য বিভাগকে আড়াল করে না ফেলে।
+
+আমার লক্ষ্য হবে এমন একটি ওয়েবসাইট তৈরি করা, যেখানে একজন ব্যবহারকারী একই প্ল্যাটফর্মে:
+
+* প্রযুক্তি বিষয়ক পোস্ট পড়তে ও নিজের পোস্ট প্রকাশ করতে পারবেন।
+
+* অন্য ব্যবহারকারীদের সঙ্গে আলোচনা করতে পারবেন এবং প্রশ্নের উত্তর পাবেন।
+
+* ২,০০০+ অনলাইন টুলস খুঁজে ব্যবহার করতে পারবেন।
+
+* সাইবার সিকিউরিটি, প্রোগ্রামিংসহ বিভিন্ন বিষয়ে কোর্স করতে পারবেন।
+
+* নিজের প্রোফাইল, পোস্ট, প্রশ্ন, বুকমার্ক ও কার্যক্রম পরিচালনা করতে পারবেন।
+
+ডিজাইন হবে Mobile First, কিন্তু Desktop ও Tablet-এও একই রকম প্রিমিয়াম অভিজ্ঞতা থাকবে।
+
+### ১. সম্পূর্ণ ওয়েবসাইটের ডিজাইন আর্কিটেকচার
+
+প্রথমে পুরো ওয়েবসাইটকে চারটি প্রধান বিভাগে ভাগ করব।
+
+### YOUR TECHNOLOGY PLATFORM
+
+One Platform • Four Powerful Experiences
+
+CONTENT
+
+Posts, Articles, Tutorials, Guides
+
+COMMUNITY
+
+Q&A, Discussions, Members
+
+TOOLS
+
+2,000+ Tools, Categories, Reviews
+
+ACADEMY
+
+Courses, Lessons, Certificates
+
+Unified User Account & Dashboard
+
+একটি অ্যাকাউন্ট দিয়ে চারটি বিভাগ ব্যবহার
+
+এখানে একটি গুরুত্বপূর্ণ ডিজাইন সিদ্ধান্ত: চারটি বিভাগের জন্য চারটি আলাদা ওয়েবসাইটের মতো ডিজাইন হবে না। একটি ইউনিফাইড Design System থাকবে, তবে প্রতিটি বিভাগের নিজস্ব Accent Color ও পরিচিতি থাকবে।
+
+### ২. Homepage-এর চূড়ান্ত Layout
+
+আমার মতে নিচের সিরিয়াল অনুসরণ করাই সবচেয়ে ভালো হবে।
+
+Homepage Blueprint
+
+Final Proposal
+
+01\. Header & Navigation
+
+Logo • Search • Menu • Notifications • Profile
+
+2\. HERO / SEARCH
+
+### Explore. Learn. Share. Connect.
+
+Posts, Community, Tools & Academy
+
+Search anything...
+
+CONTENT
+
+COMMUNITY
+
+2,000+ TOOLS
+
+ACADEMY
+
+03\. TRENDING POSTS
+
+Horizontal featured slider
+
+04\. FEATURED NOTICES
+
+Admin-selected announcements
+
+05\. EXPLORE CATEGORIES
+
+Popular categories and subcategories
+
+06\. LATEST POSTS
+
+Latest articles and community content
+
+07\. POPULAR POSTS
+
+Most viewed and discussed posts
+
+08\. COMMUNITY Q&A
+
+Ask questions and find answers
+
+09\. FEATURED TOOLS
+
+Popular and recently added tools
+
+10\. EXPLORE ALL TOOLS
+
+2,000+ tools directory entry point
+
+11\. FEATURED COURSES
+
+Academy courses and learning paths
+
+12\. LATEST TUTORIALS
+
+Technical guides and educational content
+
+13\. VIDEO LEARNING
+
+Selected video lessons
+
+14\. COMMUNITY HIGHLIGHTS
+
+Top contributors and discussions
+
+15\. FOOTER
+
+Useful links, policies and social links
+
+এই Layout-এর বিশেষত্ব: ব্যবহারকারী প্রথম স্ক্রিনেই চারটি প্রধান বিভাগের পরিচয় পাবেন। এরপর একে একে Content, Community, Tools এবং Academy-এর বিস্তারিত অংশে প্রবেশ করতে পারবেন।
+
+### ৩. Mobile First Header ও Navigation Design
+
+মোবাইল ব্যবহারকারীদের জন্য Header খুব গুরুত্বপূর্ণ। বর্তমানে আপনার স্ক্রিনশটে Header একটু বেশি জটিল। সেটি সরল ও কার্যকর করতে হবে।
+
+TECH PLATFORM
+
+Search posts, tools, courses...
+
+মোবাইল Header-এর সম্ভাব্য বিন্যাস
+
+Mobile Bottom Navigation
+
+Home
+
+Explore
+
+Create
+
+Community
+
+Profile
+
+এটি মোবাইল স্ক্রিনের নিচে Sticky থাকবে। Create বাটনটি বিশেষভাবে দৃশ্যমান হবে।
+
+Explore-এ চাপ দিলে একটি পরিষ্কার মেনু খুলবে:
+
+* All Posts
+
+* Categories
+
+* Tools Directory
+
+* Academy
+
+* Tutorials
+
+* Trending
+
+Desktop-এ থাকবে পূর্ণাঙ্গ Navigation Bar এবং প্রয়োজন অনুযায়ী Dropdown Menu।
+
+### ৪. চারটি প্রধান বিভাগের বিস্তারিত ডিজাইন
+
+### A. Content Sharing Platform
+
+![TechWriter: Free Blog Website Template by Luca Da Corte — Framer Marketplace](https://images.openai.com/static-rsc-4/8y0g-nyPKvLnWQ67ObKR4wuw9u5vYvAisVcj-6L0_L3V6PDg-VfV0N9flvOWKbpg2wAx6iugPrdoi_mlVlzll1_O_AKIZH8FuOqwhIzaEtMoNxsxy3KUUFW57ZWL4bxYTJ9vLxnV_4Me0D46uyL8eiM3I5oSrtJtK-bccsWqXksteEf_o-mwWV5Ab0pYR0sD?purpose=fullsize)
+
+![Flipatic Blog — Clean, Editorial Layout in Dark Mode by Autentika on Dribbble](https://images.openai.com/static-rsc-4/POaRD10jDkdiV1zc_7E1RjtZWhxLZqUhVqOmVDk5PFNiACZoUlF9KqFhDngRVk4ia7EAI-EGZJASY3R7jcROZ-MnC-OITlrw9sOeNlykiLHO6zcV8TseQm9UMX_fUmWHAXmvzSIUMFOOSP-7MtPoA-B6X_W_pOQ9kfJ8XMCdHw3wG2Z6m6ILEHWmBHqUtJDZ?purpose=fullsize)
+
+![15 Open-source Next.js CMS Solutions, Starters and Templates](https://images.openai.com/static-rsc-4/PlavcvekcUyq1hz6r9R84oQmr8YuOHeW1MsTnuwiPIHwgh7J4Bo9pVl_OcuSte-aDmxUgaW50ihdXbVCxZDtSrM_5rh5QczRQ4CeBhcwIJALBM5Y0Fyk7_IQQBFjG1mU2Ocos5CXTdki0HVFKFh-pxBsD-woPuZLoTjxCWIdUI5OPBJZKNcf3RPKpC0ULOnc?purpose=fullsize)
+
+![News & Blog Cards Dark Template | Swiper Studio](https://images.openai.com/static-rsc-4/9wk1wfiOANh0iIXZyWb5Du8jfFFV8KbXNCBem4_Ve3H-uHm8t_Vuk0RO_oENZhqN07ceGhgSW7WOZbfCcaTaCKlKe5HVdnx0J23gbKRAszZByAdy-ACAQ2cHDlH8-T4AkJgb2yvOeSWAvUgUyQn1SDaIo0NPzydmT3B2ZLEiZsM-HOhdfXq-bgIJ6mRTH2mq?purpose=fullsize)
+
+![AI Retail Blog & Content Platform: Article & Insights Module by Keitoto  on Dribbble](https://images.openai.com/static-rsc-4/V8KyqUJwdwCfAJp0f5N5GyuEIL88tsMh14BXvM0-poS7wS7bOkzR5cILm-MZwFQyCYae4vHd8c6USh2TZBLblW1AA9I-64BnkV9oyqvXz3iBjUhw_pvHHWUE9IuJj1dmHdJ6ExD_Lpkvkj8WoGtSO0dcxuVFQZFwGy6xMHgZWg5VBf1pylU87xEs-_EAZ3Kk?purpose=fullsize)
+
+![Building a Table of Contents Sidebar Without a Library - DEV Community](https://images.openai.com/static-rsc-4/5J5RPZxzCxqwlcuK__TOQDO_IZhRyAm6uf5lEc2NrVRTvw2hnYWoyy5opJG7RhDOjbd4QdkjMduA9unVRv_ZqN11KKIjcQ65Iaw8dxM3aC69sWvjjLJo78B9Z57mFyXOG1y6mMN4SZjtXLVxyvDNI52sDAbEH9Yje-y91yCW90r0loYy2ERgK5LgwVabqM9R?purpose=fullsize)
+
+![Payload: The Next.js Headless CMS and App Framework](https://images.openai.com/static-rsc-4/6xslMoYgHrD-o-f_zxAbUoGcKD1HQP3J_HF6bZR4TbNJAFR7wDB6W4JSsl866tRp1tIqDWyS2OV7MeCiIjUbEFhnczXHlRrKMnGL83TqOq4_V2mycXMu-zRe9JXHhC4vsJ0CTS1-bjRBJxu9rdMBmW14YL0l9hO2gnZyAuypBaI4qk0yifpaevXNrGBAkVSa?purpose=fullsize)
+
+![Dynamic content publisher - Web UI by Christian Nnabugwu on Dribbble](https://images.openai.com/static-rsc-4/m3U0qMcVP8WaDO1RSF4TibgR2xaFCRqlzkAB4MkyCnvDwWBmuhePRP5WD6E7-IDJzlHEzONWOeuy5AGtbtvBO6bwqvkh5JU0TvJz42tmz-yp3ZMMZOFSMhuXJMYG-fNz65gI88geEWyJWSYOgyexYTFN7GSGQu1AlD6noNV6W7wsbUGCFT7fSGWw4Ckn8uhU?purpose=fullsize)
+
+![Sleek Hi-Tech Products Landing Page Design (Dark UI/UX) by Mohammed Ahmed on Dribbble](https://images.openai.com/static-rsc-4/NFnQXnnhcaqS41na7NIioIgbUjPadzvX7McXTqQ8-Mp4I45748o6olOv7N5zOE_kHW9cHfvtp2ee1zssXUbL0OG17td-ShHZwELoaSRFAexM2llSAM8yUHG4WHxevh8gWnyDZTcnTYQZx9MYc_yoJ3njR9FVhf6yxO80qdT119FLdsYScVjIxNYO-KC-fmQC?purpose=fullsize)
+
+![Pixagram's Material Design Text Editor by Matias Affolter on Dribbble](https://images.openai.com/static-rsc-4/-zeqpqjuU4RGWsdYphgsixHrOmnEnylHaf3CvuiUJlDQxi1a22dW7dP1bYppD50j-7Ua83ock-prVEwGC3y9cGCDUNr938UQSuTuC3QDyfNGnuVwbdJksRdz8Mnvekf753TkCYYxmRrl4mgWLM9bXPl5wGW3olEBI13UDM3YnIXiTKehe0Qk6X-2LVSw41MM?purpose=fullsize)
+
+![A new dark theme for the blog! - Programming for fun and profit](https://images.openai.com/static-rsc-4/Mrfp8MyMw9ojybg2FnAyfT2qajrr4EhB30zbOr_kDvBk7wR_V-AWTDAtGVtLLFLcn7PkrYI7rJYD4A_UgVY0gcOM3R9AOVM0v50Fv4LSaEWcYWvub7RJ8mLKmymLh2b-zgmaZLdKGXYwkSE4t1EBtjEHevCLeEp3FKbfIurQvPx8aGJ71fl_p0X-ASnAsRuo?purpose=fullsize)
+
+![Cue - Social Media Scheduling](https://images.openai.com/static-rsc-4/81x6EOsWX8UBLSVPl8YD30XeuJFiyG62wauALPxHLrD7hAG0JB7ngxkHvkoaNC9COLmRsjwQtASzekFb7hcdMUJOsw1bWOPmHGsiXlYq96KDRhnYZGPWRq5vpGIX0ce3VCXQUD0v--82CCOj8PLwpWjNFBDF9wYWBVj6eH9i57FfQJyS9e25iUz6f0CaZg-9?purpose=fullsize)
+
+Content বিভাগে নিচের পেজগুলো থাকবে:
+
+| পেজ          | কাজ                |
+| ------------ | ------------------ |
+| All Posts    | সব পোস্ট           |
+| Trending     | আলোচিত পোস্ট       |
+| Latest       | নতুন পোস্ট         |
+| Popular      | জনপ্রিয় পোস্ট     |
+| Categories   | বিষয়ভিত্তিক পোস্ট |
+| Single Post  | সম্পূর্ণ আর্টিকেল  |
+| Write a Post | নতুন পোস্ট প্রকাশ  |
+| Saved Posts  | বুকমার্ক করা পোস্ট |
+
+Single Post Page-এ যা থাকবে:
+
+* Post Title এবং Subtitle।
+
+* Author Name, Profile ও Publish Date।
+
+* Featured Image।
+
+* Table of Contents।
+
+* Article Content।
+
+* Code Snippets এবং Copy Code।
+
+* Image ও Video Support।
+
+* Tags ও Related Categories।
+
+* Like, Share, Bookmark।
+
+* Comments Section।
+
+* Related Posts।
+
+* Author Information।
+
+বিশেষ করে টেকনোলজি আর্টিকেলের জন্য Code Block, Syntax Highlighting এবং Copy Button রাখা উচিত।
+
+### B. Community & Q&A Platform
+
+![Online Web Platform to Learn Coding by Ronas IT | UI/UX Team on Dribbble](https://images.openai.com/static-rsc-4/-hx8NO2kiN4Op08FrHJMfUxnqPvdpbYp39PW_hLW9ussH_D5VqhNTI_h0qAP5JnhsFuM_tUzYVJxYJ41ENAi2BEaGcUzyxbEOUEtwp8EFVpzZQJOiKEjKoMXqmqe4H_Xs2nXRnKSRvf1-eUuhPlcOuIvh8qhoJkiwZmXFPs7zayJ-SWn9r3UpKr4I8NBp1u5?purpose=fullsize)
+
+![The Ultimate Next.js 16 Course](https://images.openai.com/static-rsc-4/vv7hvFUhXUqfaquTC8UPEN6Q3EU_ottzec7VgEDh3-RjYhgHSNGRBbhAISnjmT14FGETFWChO1xK8hrI65CNXL6jOsGFrSEpTZB3xQLE8867l1sJ5m0_8ln-hwMK3IksDJwbFmQNhycJagMDEqQqxgqJ5kWKwkSgVGpnNzLs2nMLM3zc_MewG08NzqkDkZeO?purpose=fullsize)
+
+![](https://images.openai.com/static-rsc-4/uz3A5cCNL_r8TKt63QdZSfzbOnDBnR7xo8hAZTDz31tc0Ql6UDZuKzxZ-niVaX7Fcw8Z5GFAaX9b43ZO303eawq4XiE0neafMwNfLZuwJo3ENXt815A5-D3wdDHEwraStXqZ175FGud5BNlCWeiId7_P3F8tXe9y50m5yXLvfA2GqeZCI-A4fIlkMAjNYzbE?purpose=fullsize)
+
+![Créer votre propre application mobile sans coder avec FlutterFlow](https://images.openai.com/static-rsc-4/yQJsFlxdZMoR8xxesF84VEozI-0vfcXcw2TfVNFtksn49kL8f_CAObuVHITBiKDWhtlFrA96vr3FBgezjWlZZPWTiawnk3EUnnFThYH7N_CtQImyFvDmqkegBdzxm8-2io7TLpeNH2492QiYokgTIKYK3tcIEIJH4AkE9W3Nt3CJ0TXAfN2dM8OKYrxBAN_j?purpose=fullsize)
+
+![ProBB - The Ultimate Discussion Platform | Codester](https://images.openai.com/static-rsc-4/RoWth-ijN0rQYfLaG_kFPX8lhBAAt5hJsMGq8AI4sA1HC8FUs410KLbmxqZoaStydcTQ1ZFKyUWwh3519LfBYVjJuV8fNvDBC1qYnoBI6wbkhmrAvgN36JuVsefjZLyuwzRvUb2Eir8qtMEptyysuswJGOELmLlWmRlkns_PxqdbYJKCwkn3teyt-90mD7Nm?purpose=fullsize)
+
+![Flatboard](https://images.openai.com/static-rsc-4/C0aIX2czRi7nXzYFLX3hpGucbSWQRLw7_yPpcZJQxI3i_9jaQmj_dZvjlOb_6LdLzX88rK_F937FI9hCYtuw44ATn6XbPilUyLvTYywJw7F7jkj7QRknR8h13gZKhAXokacHFd-OSUZyzoCKpcjvhWEtTE7K99XkTmdqKV6zp6fxULGd_zMvx3gfCBAiZRC6?purpose=fullsize)
+
+![Ghost Theme - Thema - Discourse Meta](https://images.openai.com/static-rsc-4/TwtbuiIVkC4G0AIhvaWkxkR9XmukZs50KOfiWA09iQV0s8D8Tp5-RE6aBGMZ6xKaj7oBUTyeAK3lEpZ0oUIBuh6FGpeqQC7rte3mZ3ZFG3dpGwdqqHs59C1mAUXGkkIWkU52hFNrovr67IEr2wZZud59iA-JvEQofKrokI8wr8hD3HsuLw0AwOj4EtH1I9d-?purpose=fullsize)
+
+![Discusli - Forum Website Template Modern Community Platform Design - Wrapmarket](https://images.openai.com/static-rsc-4/hDCdP2wIC2Kc23TUOf_CrIX7Chp7SLONP9TvdXXncLNkb9V2P7SeHxWTDKjaRsiVHqINYCEfvP-hvm_YzGKrjMvA_u8Od0YKh2KwfteTyBuAfRYWAGl-GiF6atecR607IFneK80AS3xL7nNF2zBmu9zViNZqZ9OClW9B0-YZo2fepT0803Ejr8h5egEwPKlA?purpose=fullsize)
+
+![Subsocial Substrate StackExchange | Devpost](https://images.openai.com/static-rsc-4/6m85X01-8l9lmWnW5T8BfG5WFYH26cwd01DF1jRgFl6qQzkwtGV7o_95XWk80FTlQYw3J87-46v4lJBt683izKFDgwAOMdn3y3iweanlQXAW7Cn_S7PV3wQjGT_hn1iR4-oxknCyGHO_5ix95-ihOgxlnpDSfkaMfDye2DAeg8h9S8mOvNPBwCdjfTh3q9Lw?purpose=fullsize)
+
+![N8n course 1 badge - Questions - n8n Community](https://images.openai.com/static-rsc-4/5ODDxABuj3kh18Em7Onj1jUZFwYNwlKqmyrY5wbwRJZClDY89b4UK_RMKuS4g37mlQEQnLSSe65h_KItnMpK7ExC7lcWpwzvsq6_c1IzBZ5MKMJcLjzzccpWYJdUQt7zvLFXrLyDEWcJqzOdWfMKip9SgkVF6CRgpwd38cXuRDSdy6EdRnJ0hOUHxl2pLFzj?purpose=fullsize)
+
+এখানে দুই ধরনের কনটেন্ট আলাদা থাকবে:
+
+* Discussion: সাধারণ আলোচনা, মতামত, অভিজ্ঞতা ও শেয়ারিং।
+
+* Q&A: নির্দিষ্ট প্রশ্ন এবং তার সমাধান।
+
+Community-এর নিজস্ব পেজগুলো:
+
+| পেজ            | ফিচার                 |
+| -------------- | --------------------- |
+| Community Feed | সব আলোচনা             |
+| Questions      | প্রশ্নের তালিকা       |
+| Ask Question   | নতুন প্রশ্ন           |
+| Discussions    | সাধারণ আলোচনা         |
+| Unanswered     | উত্তরহীন প্রশ্ন       |
+| Solved         | সমাধান পাওয়া প্রশ্ন  |
+| Leaderboard    | সেরা অবদানকারী        |
+| Members        | ব্যবহারকারীদের তালিকা |
+
+প্রতিটি প্রশ্নের সঙ্গে Tags, Answers Count, Views, Votes এবং Solved Status থাকবে।
+
+একটি বিশেষ ফিচার রাখার পরামর্শ দেব: কোনো প্রশ্নের উত্তরকে প্রশ্নকারী বা অনুমোদিত মডারেটর Best Answer হিসেবে চিহ্নিত করতে পারবেন।
+
+### C. Tools Directory — ২,০০০+ টুলস
+
+![Toolstack • Craftwork](https://images.openai.com/static-rsc-4/ip1mJ1GV_ha2QjRd8TTYlxFp0uqq9yu1TayLPNWVzCqVwJCgvS7_36LysqshHvCqrWF-Xgah5BkCe6DgLdQVRbrwD8qeTan-rBxO_HvG_GMcUhfwFIihV9o6905hwpmj27WubRyAQys6TT9D2ObfPAkCdXed0_g9w5B9U4CzstqdBEYqx0yvRzVZ1G6E9vYQ?purpose=fullsize)
+
+![This item is unavailable - Etsy](https://images.openai.com/static-rsc-4/YeAXbf7Tkbrrl4R-XhKdrIPWlPcMZKpWAdq7XwdH85NvcSjgGgbE3QWfetuqmBalMHirHfsHXeAZXz8pkzceWwlNli1RmVjKkL1vVsjCr0QPkxOSYoo6XPJpbjpWnPa4AmiayJIRaLbHeC8RodZymvqfMkd21cgSRZUGfx2798Hw3Wymg-OW194N8TpOjWVe?purpose=fullsize)
+
+![AiIndex · Discover the Best Directory for AI Tools & SaaS Solutions. | Launchy](https://images.openai.com/static-rsc-4/DgxbZTsfPP1HtAWJ8KP3XlCxRIgDBJDpzYK25Za4mfmDlGcu4U5HJKvFxk-rpy696Suf1-6yAc0ccPLau1AUEk4IldNTV15ztz2T8UueVv5IzQAkYDTEbo5xpy9YEHGyRXXDleeG7xEfs4RUSebfCkHo7Z1LFwV2eA-O-DgJg9m3HM2HHQdqBYC1Cd9fqEkV?purpose=fullsize)
+
+![LunarList - Discover & Launch AI Tools | Peerlist](https://images.openai.com/static-rsc-4/yl5iD9LPIj14tvKc3aQros9_IgfaKwUnQfuTfR8HYyAdDPUTm-5-uZpt4svtm8pJnHGZabWL74xCerg00BNjQfTyTmQsIyJykhyAXkEQC3Ag25NCsXoBMDbmmscs0U7-G2H708YC4Il88DfTBDMRjIHnrt-l5eJsCJCnEYmRhbk4RBzIC0Q_wwaYEBOLEWs_?purpose=fullsize)
+
+![10 Best AI Tools for Business to Use in 2026 | Oryndex](https://images.openai.com/static-rsc-4/gDiXE_yvDc2ETlu7t34qfJMvbamh7LnnaqMox6tIpTf2I9XBv3_Cifv1tZmFYA3TN5FOny7VxzhEY-EfgMcb2VNEA-zpAWmmRGkLUjqNuJTRz8aimr3QM8D_EgqFJGzixxeOQ1GOOlfWDPB305sFYldI0xtChDvjJBJS6nh4SpAggJzeHGPSJPLGwr_Iq3j5?purpose=fullsize)
+
+![Builtfirst | Build Your Marketplaces](https://images.openai.com/static-rsc-4/Kj8j0wGQu2XdFFVAKHtgYJBEyYAa_i5HGT10Klh5FLr0QBRCwr6sHp-ZJz9ZRJTatAVcXnAnslMWtuXuEifmSyyAKqNeBiaHuv-3EweQhLvx6yxYQP8S1Y_epA4KtNKrQ5FoCeE0uREyKeYXnUjr0f1aFEcvJuZluL6gRX2uJhFBipVinm79vGFFnmyrb4QH?purpose=fullsize)
+
+![Launch | DeepLaunch.io](https://images.openai.com/static-rsc-4/9XaYsazfGDO00T-m11RrZGClq3OQ7TJbefwO68bnr-xoiq2f8D1W-jcf7bunj3dL_zHMoPE0rf6qqT0znxxbWi3fwFTr08UiY0xl1K_ESQHLOFLjubk4DGZjdBYUzSMUvHhGrCr6KjsZs_0UMBBcb99pbEb_RB_DMJ9s77_CcOS5lnQU-SongcgBd3Z5CvdY?purpose=fullsize)
+
+![Learn How to Build Real Projects with VIBEcoding](https://images.openai.com/static-rsc-4/nt8JGjwAFu5q4ODO9I5QkrxIBmHs4DScyXdyzs4dKJarPixsbqbMNGzi4l5Fy0lg1jVlrF8KY4ul7Z2zMylMG3IrLPW8T-51wNmIAvM4-RLmrh30bDvm3Wzubri2yXVPgbdDb2Xzl57WUPelJFTO834RW1HDx9ZSZdXRP-5PJS1Fga9jHDdJeX7PXQ4Iv2YI?purpose=fullsize)
+
+Tools বিভাগকে একটি আলাদা বড় Product-এর মতো তৈরি করতে হবে।
+
+প্রস্তাবিত ক্যাটাগরি:
+
+* AI & Machine Learning
+
+* Cybersecurity
+
+* Programming & Development
+
+* Web Development
+
+* SEO & Digital Marketing
+
+* Image & Graphic Design
+
+* Video & Audio
+
+* Networking
+
+* Linux & System Administration
+
+* Android & Mobile
+
+* Productivity
+
+* File & Document Utilities
+
+* Cloud & DevOps
+
+* Privacy & Encryption
+
+প্রতিটি Tool-এর নিজস্ব Details Page থাকবে।
+
+সেখানে থাকবে:
+
+* Tool Name ও Logo।
+
+* Description।
+
+* Key Features।
+
+* Free / Paid Status।
+
+* Official Website Link।
+
+* User Rating।
+
+* Reviews।
+
+* Related Tools।
+
+* Report Incorrect Information।
+
+Admin Panel থেকে নতুন টুল যোগ, সম্পাদনা, ক্যাটাগরি পরিবর্তন এবং Featured Tool নির্বাচন করা যাবে।
+
+### D. Academy & Learning Platform
+
+![Browse thousands of Ios Dashboard images for design inspiration | Dribbble](https://images.openai.com/static-rsc-4/IzjSkLTE-RZZSx4Pkyw1wGo4JvEU6Wcx1V96DVeBr-3SISAn4X7Yt-CamQhkThNDA5yWHaVbbbCjd-1Sm9BCk2duWUPiOoUIEmTe0P4TdSdQbcCzlaw2qEcxCANrROr24Q8hfT5KXifpJ_6urI8iK_nmcZrjMAiWcOcNaqu78Nul0gxeIu7TqogZRVniXU9q?purpose=fullsize)
+
+![Corporate Learning Management System Web Design by Ronas IT | UI/UX Team on Dribbble](https://images.openai.com/static-rsc-4/ExVUMSOsqG2CodgcMRYngu4_uu-rqD4BQkZ2AtY20b11839kj0LCpwl_rqy3_yV_PIRP5ZIvNmNqEKiP47iwJ92czItyMi6BfxTP-PgMrKb5sKWyI-rEI3IEZ70Y2kcHFv6gTzAS36wCqCRd4FoN7MPFisE4aydwx8NDUzX6g4PiTxWoz7Dnd8nJgesalmNs?purpose=fullsize)
+
+![Saferta — Certification & E-learning Platform | Norbert Kovalčín](https://images.openai.com/static-rsc-4/Qgc3BPV42iMl-NHG913jYBaeJ5qZLvGs8sgechFDouZm9xQI6ysWNShhPQSIyhq0n8F0OCQnwdPA_DhIIIr_oarYk1jQZTsS9L8Ykr0SSnUZRcJN95fbcNfrHDsvuakZh4DDsVLIxcxrgocyb3Uv1we9MwEiq0-HXtRU2cnjkCEatnrn1GGMp1lbOXVNwKAF?purpose=fullsize)
+
+![Yuvraj Shah | Full Stack Developer](https://images.openai.com/static-rsc-4/viDrT2SIwV5tEo6mapGxvLwIeGjL-tzzh_FBLhUQq8PMBI7hXTC95WaLfEoHn3j78R1uWPXoSapUoLGPv0gg9Lyy9zz9AGLIZ5Sh1J6jhx7beDEOSUEBmbUm_t1U0PUfGuGH_ahoG3X4MkeqTbRBiBxCWwTNjDklbaHpoE3YV3NJwWX1CJo1ME7jzzgEq7g2?purpose=fullsize)
+
+![Online Education Platform Design Conept by Ronas IT | UI/UX Team on Dribbble](https://images.openai.com/static-rsc-4/7xiApv2l74ujbYNDLG59cWBDYYnuZH0uHMvMHaasB6MmD3RskHZbwWclcnS4wHzyhip6h6jcpI6uY8s9N25DRzgQM6bffY3pULR3WXEVu-SLPmV7xRPxqC2LBCqFwN0-FGaidtYsLh_KR6nF8sHEiNtk9VPmn6qiq1m6utUD6HP037S0C-9vy654O9_PmbYC?purpose=fullsize)
+
+![Course Player and Library by Tverdun Illia on Dribbble](https://images.openai.com/static-rsc-4/3SYPuX-3fHeyhYoyjNj-Li3_0hwcBFARNNYG_6j5zVAHNulopx7I9oG0glNWuW-RtXqAdvluZ8wAZV0JQbu8UvCuTuR6XHJU-b--OvijnYYvRxDDLolEUFPBejc6yIaqMamgbk41UQkRE9SMh3vdovL2KS_4z717d3h5FPKyMD6KZlxp0Pa3_g2eNi47YZqC?purpose=fullsize)
+
+![Learning App - Dark Mode :: Behance](https://images.openai.com/static-rsc-4/ljEDEw4giYvJOlH_Bp7v_g9QcMjT2Y7F6sJMkzXkTteP490QujeeQeluO_7RBlcuHLjbkt2TIvqqTcQvW_9f0yotkiv1rwQtaWCg7NsTF1QaxCIqdb9lKCiuEfksOSX4chaCz8C2xUhqMn5VJfZPJn1UzddWBGHESTWrB7R_ori4TwSQ5nuVUVSFJJZGHdQU?purpose=fullsize)
+
+![Sandeep Kumar — Senior Full-Stack Web Developer (10+ Years)](https://images.openai.com/static-rsc-4/pEDodDzd3H7Tu8d-UlZ2gxEoVyF09-AT-5TSJGIsnaSgm9hnXc7DsHLn2nsw0OrniMUsTv9iGytUW_stxALjYcUbGl1Foz10ruAQjVDooGt9oS0Y_BBflgbt9MmI4OhYKtvloiFISkDOXXOO7IS9J_FnWpEK2jYjtrXOHkc5ShOh8zJAxkJAxHc5xFJ-KAK_?purpose=fullsize)
+
+![LMS Dashboard Widgets by Vlad Tyzun for Radiant Studio ✨ on Dribbble](https://images.openai.com/static-rsc-4/-ojOiShmlkPrHJ4zlr1Muytt2nrj511LrhhGmi_ySXd-_bHKL8roXMNce7sRvgshtWp5WAyg_x2tMfR8ZuFSAd9Mk7r-HxhQ1WQvck5xS2SVhYS-qMjjtTzj_XsRsA9kmkV2OeM-FjZxzyj7y2hWSQgm25vcaiQwpiKl3rIdqPsMFkM0Em3FhJAKv-OM3xNu?purpose=fullsize)
+
+![Online Design Courses Dashboard by Perevoz Design on Dribbble](https://images.openai.com/static-rsc-4/iqZSHbLFSpNeyt1aqzEpHiH2RxSxcPSHmzXpA_wuhpZdQzz9T9gsGTdqC1PbyIHy2xYOxmN1nuUlmssg1MdECbnctjajDQ8_wwzZFa2SCmNXKJjx98rBt16vDz6VVazWnjvdc8Eo-b-TtG0pcl4kj6o7TIwFBcn54mxtHYBUZlgEFZ2ONhFbdjRwxYf_md3K?purpose=fullsize)
+
+![Online Education / E Learning Dashboard :: Behance](https://images.openai.com/static-rsc-4/3LHgitIoDvZrnomWDbIseeZDMBObd0C1rz8_unJmoS2tiWjficPsE7SZLBar-7tsf0ntBWRRVU1epry-ss99e0xX5Pftq4VBPd6RcdvoG_ncpUv8ocyibZkjNz9L5Poh7K3c2KOix45yMAkUdZ_WISle8VDOtZs9ttB97C5rSTJzCKAmBuAaZH_i4AG7lqSC?purpose=fullsize)
+
+![E-learning SaaS Platform for Online Courses by Valentina Guerrero](https://images.openai.com/static-rsc-4/9z4dQjGxxTEjRez_1K64xTIJyGTCMDpgKixtSwlIz_XWMVHPkSe_dr6KCRtBwiwR_LRC3u5Qa0CrPweX8XarkNLN0lPdJiBwjfZvuiHAxB4sUC-GcsWc2HotqGlYNieCtseJqgdI5hMQ-2q-zegumnbXyeb5Zb_9BjDlrXpoYkqmSr7r1IDcWRnW4bLTjjRf?purpose=fullsize)
+
+![Learner app Dashboard :: Behance](https://images.openai.com/static-rsc-4/aY_O4ojgIyCQGBAR94gz9O6Jnq4HE4UM6hljqWi7-grntZnztjBk0dx92OAQfhKxLt0bT_gzQoOH5G3KJcUaXMAhgQfvaHdL4MVTvw7IA_JH1RBQ-TKHtbMi1nqWRd1_Ux5vDEsH1TnIUEyDhCjA8ecVmNVRSQsZ16rdeF0-kaVoaeGQ_OK8dmMf4xto1cZb?purpose=fullsize)
+
+![Wealth University | The Learning Operating System for the Next Generation](https://images.openai.com/static-rsc-4/EOIEGCszEBYSK9DSn7urhKlfTXdStdqoUJohDqlQW31Qs1WgHGud7Tw1lfWYClfNcrTUhmJ0Lct-PpK2i7DXmibdTTuFQ4ZNMem0mLybvmSFeIuDwDAJ7QezCrIQQOuupB29iYkS2KRspuQ7vTssAfgX1brDgiZi3DToLryopXlnAIYq_zBnB_XgFdGZS_sG?purpose=fullsize)
+
+![University Learning Management System Web Design by Ronas IT | UI/UX Team on Dribbble](https://images.openai.com/static-rsc-4/mVz8-tNS_YyW_9pWEoIXuffUWZTZdXEcf6fWb8_38lg8fivLD-rFGGcPOQmZPwRT0lhdsZ24B54OQZYLeYHxNPMpad67PaNr5g3KCBMUancfgpNVtf36fZo4FXwllzw-z2X1RHso2-5yN2n68ZAjx2JnBCG1Q89o9-SovsNENrI8o6u_xxKIT2KR8anghctZ?purpose=fullsize)
+
+![Aspira – AI Personal Tutor UI Template](https://images.openai.com/static-rsc-4/hKeEga9dWHkaKAEa823jykZuVMCrhV9hMemz5AZHpK1nSGIfhDO4oejCxx2QiKuLHeIyIXM3rAEZWqfOrTr6fTWEQL_I05JgWk71ZUjI6EmqLd8ShYx-z7Qf7YAOfk7snu2h32zeOytZA08aUT2Rm3ghYu9pkFwtB9t4BJ0z0u77abwYyvz89_yrMNgceUgt?purpose=fullsize)
+
+Academy-কে শুধু কয়েকটি কোর্সের কার্ডে সীমাবদ্ধ রাখবেন না। এটি একটি পূর্ণাঙ্গ Learning Management System (LMS) হিসেবে পরিকল্পনা করবেন।
+
+প্রস্তাবিত পেজ:
+
+* Academy Homepage
+
+* All Courses
+
+* Course Categories
+
+* Course Details
+
+* Lesson Player
+
+* Student Dashboard
+
+* My Learning
+
+* Certificates
+
+* Instructor Profile
+
+কোর্সের ধরন:
+
+* Free Courses
+
+* Premium Courses
+
+* Beginner Courses
+
+* Intermediate Courses
+
+* Advanced Courses
+
+* Practical Projects
+
+কোর্সে Enrollment, Lesson Completion, Quiz, Progress Tracking এবং Certificate Generation রাখবেন। পেইড কোর্স থাকলে Payment ও Enrollment Verification সিস্টেমও দরকার হবে।
+
+### ৫. Category System কেমন হবে?
+
+এটি খুবই গুরুত্বপূর্ণ। কারণ Content, Tools, Community এবং Academy—সব বিভাগের নিজস্ব ক্যাটাগরি থাকা দরকার।
+
+কিন্তু সব ক্যাটাগরি একসঙ্গে মিশিয়ে ফেলবেন না।
+
+Unified Category Architecture
+
+Main Categories
+
+Content Categories
+
+Android
+
+Windows
+
+Cybersecurity
+
+Programming
+
+Technology
+
+Community Categories
+
+Help & Support
+
+Programming Help
+
+General Discussion
+
+Troubleshooting
+
+Tools Categories
+
+AI Tools
+
+Security Tools
+
+SEO Tools
+
+Developer Tools
+
+Academy Categories
+
+Cybersecurity
+
+Web Development
+
+Networking
+
+Linux
+
+প্রতিটি বিভাগের Category, Subcategory এবং Tags আলাদাভাবে পরিচালিত হবে। এতে Search ও Filtering অনেক বেশি কার্যকর হবে।
+
+### ৬. User Dashboard কেমন হবে?
+
+এটি হবে ব্যবহারকারীর ব্যক্তিগত Control Center।
+
+MY DASHBOARD
+
+Welcome Back!
+
+Your personal activity center
+
+Member
+
+### 12
+
+My Posts
+
+### 08
+
+Questions
+
+### 24
+
+Bookmarks
+
+### 350
+
+Reputation
+
+Dashboard Menu
+
+My Profile
+
+My Posts
+
+My Questions & Answers
+
+My Courses
+
+My Bookmarks
+
+My Favorites
+
+Notifications
+
+Messages
+
+Account Settings
+
+একই ব্যবহারকারী চারটি বিভাগেই একই অ্যাকাউন্ট ব্যবহার করবেন। আলাদা আলাদা অ্যাকাউন্ট তৈরি করতে হবে না।
+
+### ৭. Design System ও Responsive Rules
+
+প্রস্তাবিত Device Layout
+
+Mobile
+
+### 1–2
+
+Columns
+
+Tablet
+
+### 2–3
+
+Columns
+
+Desktop
+
+### 3–4
+
+Columns
+
+Design Rules
+
+* Mobile viewport-এ horizontal scrolling থাকবে না।
+
+* Card width স্বয়ংক্রিয়ভাবে পরিবর্তিত হবে।
+
+* Text কখনো অতিরিক্ত ছোট হবে না।
+
+* Image ratio একরকম থাকবে।
+
+* সব Button-এর touch area যথেষ্ট বড় হবে।
+
+* Navigation সব ডিভাইসে ব্যবহারযোগ্য হবে।
+
+* Long content-এর জন্য সুন্দর Reading Layout থাকবে।
+
+* Layout shift ও অপ্রয়োজনীয় loading কমাতে হবে।
+
+আমার প্রস্তাবিত Color System আগের মতোই থাকবে: Navy background, Turquoise primary, Violet Academy, Gold Trending। তবে চারটি বিভাগের আলাদা Accent ব্যবহার করা হলেও Button, Typography ও Card-এর মূল স্টাইল একই থাকবে।
+
+### ৮. Admin Panel ও Content Management
+
+আপনাদের মতো বড় প্ল্যাটফর্মের জন্য শক্তিশালী Admin Panel অত্যন্ত জরুরি।
+
+Admin Dashboard-এ থাকবে:
+
+* Overview & Analytics
+
+* Posts Management
+
+* Featured Notices Management
+
+* Trending Posts Control
+
+* Category Management
+
+* Tools Management
+
+* Courses Management
+
+* Questions & Answers Moderation
+
+* User Management
+
+* Reports & Spam Management
+
+* Comments Moderation
+
+* Homepage Section Management
+
+* SEO Settings
+
+* Site Settings
+
+* Roles & Permissions
+
+বিশেষ করে Homepage Section Management-এ Admin যেন কোনো কোড পরিবর্তন না করেই:
+
+* কোন পোস্ট Trending হবে নির্বাচন করতে পারেন।
+
+* কোন নোটিশ Featured হবে নির্ধারণ করতে পারেন।
+
+* কোন Tool Homepage-এ দেখাবে নির্বাচন করতে পারেন।
+
+* কোন Course Featured হবে নির্ধারণ করতে পারেন।
+
+* Homepage Section-এর ক্রম পরিবর্তন করতে পারেন।
+
+* কোনো Section সাময়িক Hide বা Show করতে পারেন।
+
+এতে ভবিষ্যতে বারবার কোড পরিবর্তন করতে হবে না।
+
+### ৯. Development Priority ও Implementation Plan
+
+একবারে সবকিছু পরিবর্তন না করে নিচের ধাপে কাজ করা উচিত।
+
+| পর্যায় | কাজ                         | অগ্রাধিকার    |
+| ------- | --------------------------- | ------------- |
+| ১       | Existing Codebase Audit     | অত্যন্ত জরুরি |
+| ২       | Design System & Homepage    | অত্যন্ত জরুরি |
+| ৩       | Content & Single Post       | অত্যন্ত জরুরি |
+| ৪       | Community & Q&A             | অত্যন্ত জরুরি |
+| ৫       | Tools Directory             | অত্যন্ত জরুরি |
+| ৬       | Academy & LMS               | উচ্চ          |
+| ৭       | User Dashboard              | উচ্চ          |
+| ৮       | Admin Panel                 | উচ্চ          |
+| ৯       | SEO, Security & Performance | অত্যন্ত জরুরি |
+| ১০      | Final Responsive Testing    | অত্যন্ত জরুরি |
+
+একটি গুরুত্বপূর্ণ বিষয়: বর্তমান ওয়েবসাইটে যে ফিচারগুলো কাজ করছে, সেগুলো আগে শনাক্ত করতে হবে। তারপর ধাপে ধাপে নতুন ডিজাইন বসাতে হবে। নতুন ডিজাইন করতে গিয়ে পুরোনো ডেটা, URL, API, User Accounts বা পোস্ট নষ্ট করা যাবে না।
+
+### ১০. Google AI Studio-এর জন্য Master Implementation Prompt
+
+এবার সবচেয়ে গুরুত্বপূর্ণ অংশ। নিচের নির্দেশনাটি আপনার GitHub থেকে ইমপোর্ট করা প্রজেক্টের Google AI Studio-তে ব্যবহার করতে পারবেন।
+
+এটি শুধু Homepage Design-এর নির্দেশনা নয়। পুরো ওয়েবসাইটের আর্কিটেকচার, ডিজাইন, ব্যবহারকারীর অভিজ্ঞতা এবং বিদ্যমান ফিচার সংরক্ষণের নির্দেশনা।
+
+Master Prompt — Copy & Use
+
+# MASTER PROJECT: PREMIUM TECHNOLOGY CONTENT, COMMUNITY, TOOLS & LEARNING PLATFORM
+
+Act as a world-class UI/UX designer, senior frontend architect, full-stack engineer, database architect, and product development specialist.
+
+Your task is to transform my EXISTING website into a premium, internationally competitive technology content-sharing and learning community platform.
+
+The platform must give EQUAL IMPORTANCE to four core pillars:
+
+1. CONTENT SHARING PLATFORM
+2. COMMUNITY & QUESTION ANSWER PLATFORM
+3. 2,000+ TECHNOLOGY TOOLS DIRECTORY
+4. LEARNING ACADEMY & LMS
+
+The entire experience must follow a MOBILE-FIRST design philosophy while providing excellent desktop and tablet experiences.
+
+Use TrickBD as a reference for community functionality and content-sharing experience, but create an original, more modern, elegant, premium and user-friendly design.
+
+## PART 1 — EXISTING PROJECT PROTECTION
+
+Before making any changes:
+
+1. Inspect the entire existing repository.
+2. Identify the existing technology stack, framework, components, routing, database, APIs, authentication and integrations.
+3. Understand all existing working features.
+4. Identify the current homepage structure and its layout problems.
+5. Prepare an implementation plan based on the actual project architecture.
+
+CRITICAL:
+- Do not rebuild the project from scratch.
+- Do not delete working features.
+- Do not remove existing content or user data.
+- Do not break existing routes or SEO URLs.
+- Do not replace the existing database unnecessarily.
+- Do not introduce duplicate components or functionality.
+- Do not use fake functionality or nonfunctional buttons.
+- Preserve existing integrations and working business logic.
+
+If a change requires backend or database modifications, explain the changes and maintain backward compatibility wherever possible.
+
+## PART 2 — DESIGN SYSTEM
+
+Create one consistent premium design system for the entire website.
+
+Color palette:
+
+Main Background: #080D17
+Card Background: #101827
+Secondary Background: #172435
+Primary Accent: #20DCC5
+Secondary Accent: #8B7CFF
+Main Text: #E8EEF7
+Muted Text: #929FB2
+Trending Accent: #EABF57
+
+Design requirements:
+
+- Modern premium dark interface.
+- Clean typography.
+- Consistent spacing.
+- Consistent card radius.
+- Subtle borders.
+- Elegant hover interactions.
+- Minimal and purposeful animations.
+- Proper icon alignment.
+- Consistent button styles.
+- Accessible color contrast.
+- Beautiful empty states.
+- Proper loading skeletons.
+- Image fallbacks.
+- No broken image placeholders.
+
+Use different subtle accent colors for the four main sections, but maintain one unified design language.
+
+## PART 3 — MOBILE-FIRST RESPONSIVE DESIGN
+
+This is mandatory.
+
+Mobile:
+- One or two columns depending on the component.
+- Compact and clean navigation.
+- Readable font sizes.
+- Proper touch targets.
+- Sticky bottom navigation.
+- No horizontal overflow.
+
+Tablet:
+- Two or three columns where appropriate.
+- Balanced spacing and readable cards.
+
+Desktop:
+- Three or four columns where appropriate.
+- Wider content areas.
+- Optional sidebars.
+- Full navigation.
+
+Test at multiple viewport sizes.
+
+Never force three or four tiny post cards into a narrow mobile screen.
+
+## PART 4 — HOMEPAGE STRUCTURE
+
+Implement the homepage in the following order:
+
+01. Header and Main Navigation
+02. Compact Hero Section
+03. Global Search
+04. Four Main Feature Shortcuts:
+    - Content
+    - Community
+    - Tools
+    - Academy
+05. Trending Posts Slider
+06. Featured Notices & Announcements
+07. Explore Categories
+08. Latest Posts
+09. Popular Posts
+10. Community Q&A Center
+11. Featured Tools
+12. Explore All 2,000+ Tools
+13. Featured Academy Courses
+14. Latest Tutorials & Guides
+15. Video Learning Center
+16. Community Highlights
+17. Complete Footer
+
+Make each section visually distinct but consistent.
+
+Allow the homepage to display curated and dynamically retrieved content from the existing database.
+
+Do not display thousands of tools or all posts on the homepage.
+
+## PART 5 — CONTENT SHARING SYSTEM
+
+Preserve and improve the existing content management system.
+
+Include:
+
+- Latest Posts
+- Trending Posts
+- Popular Posts
+- Featured Posts
+- Category Archives
+- Subcategories
+- Tags
+- Single Article Pages
+- Rich Text Publishing Editor
+- Image and Video Upload
+- Code Blocks with Syntax Highlighting
+- Copy Code Buttons
+- Table of Contents
+- Comments
+- Reactions
+- Bookmarks
+- Sharing
+- Related Articles
+- Author Profiles
+
+Make reading comfortable on mobile devices.
+
+## PART 6 — COMMUNITY & Q&A SYSTEM
+
+Create a complete community platform.
+
+Include:
+
+- Community Feed
+- Questions and Answers
+- General Discussions
+- Ask Question
+- Write Discussion
+- Answers and Comments
+- Accepted Answers
+- Upvotes and Downvotes
+- Follow Questions
+- Tags and Categories
+- Unanswered Questions
+- Solved Questions
+- User Reputation
+- Badges
+- Member Directory
+- Notifications
+- Reporting and Moderation
+
+Separate Questions & Answers from General Discussions.
+
+## PART 7 — TOOLS DIRECTORY
+
+The website already has or plans to support more than 2,000 tools.
+
+Build a dedicated scalable Tools Directory.
+
+Include:
+
+- Global Tool Search
+- Category Navigation
+- Subcategory Filters
+- Free and Paid Filters
+- Featured Tools
+- Popular Tools
+- Recently Added Tools
+- Tool Details Pages
+- Official Website Links
+- Favorites
+- Bookmarks
+- User Ratings
+- Reviews
+- Related Tools
+- Report Tool
+- Admin Tool Management
+
+Support pagination or efficient lazy loading.
+
+Use the existing tool data and database. Never create duplicate tool records.
+
+## PART 8 — LEARNING ACADEMY
+
+Create a dedicated Learning Management System.
+
+Include:
+
+- Academy Homepage
+- Course Directory
+- Course Categories
+- Course Details
+- Free Courses
+- Premium Courses
+- Instructor Profiles
+- Student Dashboard
+- Video Lessons
+- Course Progress
+- Quizzes
+- Assignments
+- Course Enrollment
+- Certificates
+- My Learning
+
+Implement payment functionality only if supported by the existing project architecture and payment integrations.
+
+## PART 9 — USER ACCOUNT & DASHBOARD
+
+Use one unified user account across all four sections.
+
+Dashboard features:
+
+- My Profile
+- My Posts
+- My Questions
+- My Answers
+- My Discussions
+- My Courses
+- My Bookmarks
+- My Favorites
+- My Notifications
+- My Messages
+- Account Settings
+- Activity History
+- Reputation and Badges
+
+Use appropriate role-based access controls.
+
+## PART 10 — NAVIGATION
+
+Desktop navigation:
+
+Home
+Explore
+Categories
+Tools
+Academy
+Community
+Tutorials
+Members
+Help Center
+
+Include search, notifications, create actions and user profile.
+
+Mobile bottom navigation:
+
+Home
+Explore
+Create
+Community
+Profile
+
+Create menu:
+
+- Write a Post
+- Ask a Question
+- Start a Discussion
+- Submit a Tool
+
+## PART 11 — ADMIN CONTROL CENTER
+
+Create or improve the existing admin interface.
+
+Include:
+
+- Analytics Dashboard
+- Posts Management
+- Featured Notices
+- Trending Content Management
+- Categories Management
+- Tools Management
+- Courses Management
+- Q&A Moderation
+- User Management
+- Comments Moderation
+- Reports Management
+- Homepage Section Management
+- SEO Settings
+- Site Configuration
+- Roles and Permissions
+
+Allow authorized administrators to reorder, enable, disable and curate homepage sections without manually editing code.
+
+## PART 12 — PERFORMANCE, SEO AND SECURITY
+
+Ensure:
+
+- Optimized image delivery.
+- Lazy loading where appropriate.
+- Efficient database queries.
+- Pagination.
+- Caching where appropriate.
+- Search engine friendly URLs.
+- Metadata and structured data.
+- XML sitemap compatibility.
+- Accessible HTML structure.
+- Secure authentication.
+- Authorization checks.
+- Spam protection.
+- Rate limiting.
+- Input validation.
+- Secure file uploads.
+- Error handling.
+- Mobile performance optimization.
+
+Do not compromise existing SEO rankings or URLs.
+
+## PART 13 — IMPLEMENTATION STRATEGY
+
+Work in carefully controlled stages.
+
+STAGE 1:
+Analyze the repository and document the existing architecture.
+
+STAGE 2:
+Create the design system and reusable components.
+
+STAGE 3:
+Redesign the homepage and shared navigation.
+
+STAGE 4:
+Improve content pages and publishing experience.
+
+STAGE 5:
+Build the community and Q&A experience.
+
+STAGE 6:
+Improve the Tools Directory.
+
+STAGE 7:
+Build the Academy experience.
+
+STAGE 8:
+Improve user dashboard and administration.
+
+STAGE 9:
+Optimize SEO, performance and security.
+
+STAGE 10:
+Run complete mobile, tablet and desktop testing.
+
+After each stage:
+- Explain what changed.
+- Identify modified files.
+- Check for broken functionality.
+- Verify existing data and integrations.
+- Fix any errors before proceeding.
+
+## FINAL QUALITY STANDARD
+
+The finished platform should feel like a premium international technology ecosystem.
+
+It must combine the simplicity of a community platform, the usability of a modern content website, the discoverability of a professional tools directory, and the learning experience of a complete academy.
+
+Prioritize usability, performance, consistency, scalability and maintainability over decorative effects.
+
+IMPORTANT: Start with a complete repository audit and an implementation plan. Do not immediately rewrite the entire project. Implement changes incrementally while protecting all existing working functionality.
+
+### ১১. কাজ শুরু করার আগে আমার বিশেষ সুপারিশ
+
+Google AI Studio-তে এই Prompt দেওয়ার পর সরাসরি সব কোড পরিবর্তন করতে দেবেন না।
+
+প্রথমে ওকে শুধু Repository Audit এবং Implementation Plan তৈরি করতে বলবেন। তারপর ধাপে ধাপে কাজ করাবেন।
+
+বিশেষ করে:
+
+* প্রথমে Homepage Redesign।
+
+* তারপর Header, Footer ও Shared Components।
+
+* তারপর Content, Community, Tools ও Academy পেজ।
+
+* সর্বশেষে Dashboard ও Admin Panel।
+
+প্রতিটি ধাপ শেষে GitHub-এ একটি Commit রাখবেন। এতে কোনো পরিবর্তনে সমস্যা হলে আগের কার্যকর অবস্থায় ফিরে যেতে পারবেন।
+
+আরেকটি গুরুত্বপূর্ণ বিষয়: শুধু Frontend সুন্দর হলেই হবে না। আপনার ২,০০০+ টুলস, ইউজার পোস্ট, প্রশ্নোত্তর এবং কোর্সের ডেটা কীভাবে সংরক্ষিত ও পরিচালিত হচ্ছে, সেটিও সঠিক রাখতে হবে।
+
+### ১২. এখন পরবর্তী কাজের জন্য আমার প্রস্তাব
+
+আমি চাইব প্রথমে আপনাদের বর্তমান ওয়েবসাইটের Homepage-কে সম্পূর্ণ নতুনভাবে সাজানোর জন্য একটি আরও বিস্তারিত Visual Blueprint তৈরি করতে—যেখানে প্রতিটি সেকশনের সঠিক উচ্চতা, কার্ডের আকার, ছবি, স্পেসিং, মোবাইলের বিন্যাস এবং Desktop Layout নির্দিষ্ট থাকবে।
+
+এতে Google AI Studio-কে শুধু সাধারণ ডিজাইন নির্দেশনা নয়, একটি পরিষ্কার বাস্তবায়নযোগ্য পরিকল্পনা দেওয়া যাবে।
+
+আপনি চাইলে পরবর্তী ধাপে আমি আপনাদের ওয়েবসাইটের মোবাইল UX, ভাঙা লিংক, পারফরম্যান্স ও SEO সমস্যা নিয়মিত যাচাইয়ের ব্যবস্থাও পরিকল্পনা করতে পারি।
+
+🔍
+
+সাপ্তাহিক Website Quality Audit
+
+Tap to set up

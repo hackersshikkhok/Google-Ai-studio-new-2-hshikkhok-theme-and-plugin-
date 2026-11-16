@@ -471,10 +471,10 @@ final class GlobalTechnicalSeoEngine {
         }
 
         $post_id     = is_singular() ? get_the_ID() : 0;
-        $site_name   = 'Hackers শিক্ষক (HackersShikkhok)';
+        $site_name   = 'HackersShikkhok';
         $og_title    = wp_get_document_title();
         $og_type     = 'website';
-        $meta_desc   = 'Hackers শিক্ষক — Premier Cybersecurity Academy, CTF Challenges, Device Reviews, Verified Prices, and 2,024+ Developer Tools.';
+        $meta_desc   = 'HackersShikkhok — Premier Cybersecurity Academy, CTF Challenges, Device Reviews, Verified Prices, and 2,024+ Developer Tools.';
         $og_image    = home_url( '/wp-content/plugins/hackersshikkhok-core/assets/images/og-preview.png' );
         $current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ?? '' ) );
 
@@ -521,7 +521,7 @@ final class GlobalTechnicalSeoEngine {
      */
     public static function optimize_high_intent_search_title( array $title_parts ): array {
         $post_id = is_singular() ? get_the_ID() : 0;
-        $site_name = 'Hackers শিক্ষক';
+        $site_name = 'HackersShikkhok';
 
         if ( $post_id ) {
             $custom_title = get_post_meta( $post_id, '_hs_seo_custom_title', true );

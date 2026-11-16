@@ -23,8 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class NativeBrandedAuthEngine {
 
     public static function register(): void {
-        // Enforce role-based login redirection
+        // Enforce role-based / return-to-origin login & registration redirection
         add_filter( 'login_redirect', array( self::class, 'handle_login_redirect' ), 10, 3 );
+        add_filter( 'registration_redirect', array( self::class, 'handle_registration_redirect' ), 10, 1 );
 
         // Style the WordPress login screen (/wp-login.php & /wp-admin)
         add_action( 'login_enqueue_scripts', array( self::class, 'enqueue_cyber_login_styles' ) );
@@ -60,20 +61,41 @@ final class NativeBrandedAuthEngine {
     }
 
     /**
-     * Role-Based Redirection:
-     * - Admins -> WP-Admin Dashboard
-     * - Regular Users / Students -> Home Page (hackersshikkhok.com)
+     * Smart Redirection:
+     * - If logged in from a frontend page with a valid redirect_to (not wp-login.php), return to that exact page.
+     * - If admin specifically logs into /wp-admin/, go to WP-Admin Dashboard.
+     * - Otherwise redirect cleanly to Home Page (hackersshikkhok.com).
      */
     public static function handle_login_redirect( string $redirect_to, string $requested_redirect_to, $user ): string {
         if ( is_wp_error( $user ) || ! is_a( $user, 'WP_User' ) ) {
             return $redirect_to;
         }
 
-        if ( user_can( $user, 'manage_options' ) ) {
-            return ! empty( $requested_redirect_to ) ? $requested_redirect_to : admin_url();
+        if ( ! empty( $requested_redirect_to ) ) {
+            $safe_target = wp_validate_redirect( $requested_redirect_to, home_url( '/' ) );
+            if ( str_contains( $safe_target, '/wp-admin' ) ) {
+                return user_can( $user, 'manage_options' ) ? $safe_target : home_url( '/' );
+            }
+            if ( ! str_contains( $safe_target, 'wp-login.php' ) ) {
+                return $safe_target;
+            }
         }
 
-        // Standard users, contributors and students redirect to Home Page
+        if ( user_can( $user, 'manage_options' ) && str_contains( $redirect_to, '/wp-admin' ) && ! empty( $_POST['wp-submit'] ) ) {
+            return home_url( '/' );
+        }
+
+        return home_url( '/' );
+    }
+
+    /**
+     * Redirect newly registered users back to the page they came from (or Home Page).
+     */
+    public static function handle_registration_redirect( string $registration_redirect ): string {
+        $requested = isset( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : '';
+        if ( ! empty( $requested ) && ! str_contains( $requested, 'wp-login.php' ) && ! str_contains( $requested, 'wp-admin' ) ) {
+            return wp_validate_redirect( $requested, home_url( '/' ) );
+        }
         return home_url( '/' );
     }
 
@@ -259,8 +281,10 @@ final class NativeBrandedAuthEngine {
             ? \HackersShikkhok\Theme\Modules\LMS\Wallet_Economy::get_wallet( $user->ID )
             : array( 'balance_bdt' => 50.0, 'xp_points' => 200 );
 
-        // If admin -> WP-Admin; If regular user -> Home Page
-        $redirect_target = user_can( $user, 'manage_options' ) ? admin_url() : home_url( '/' );
+        $requested       = esc_url_raw( (string) $request->get_param( 'redirect_to' ) );
+        $redirect_target = ( ! empty( $requested ) && ! str_contains( $requested, 'wp-login.php' ) && ! str_contains( $requested, 'wp-admin' ) )
+            ? wp_validate_redirect( $requested, home_url( '/' ) )
+            : home_url( '/' );
 
         return new \WP_REST_Response( array(
             'success'      => true,
@@ -322,11 +346,16 @@ final class NativeBrandedAuthEngine {
             \HackersShikkhok\Theme\Modules\LMS\Wallet_Economy::get_wallet( $user_id );
         }
 
+        $requested       = esc_url_raw( (string) $request->get_param( 'redirect_to' ) );
+        $redirect_target = ( ! empty( $requested ) && ! str_contains( $requested, 'wp-login.php' ) && ! str_contains( $requested, 'wp-admin' ) )
+            ? wp_validate_redirect( $requested, home_url( '/' ) )
+            : home_url( '/' );
+
         return new \WP_REST_Response( array(
             'success'      => true,
             'message'      => 'Account created successfully! Welcome bonus credited.',
             'user_id'      => $user_id,
-            'redirect_url' => home_url( '/' ), // Redirect to home page!
+            'redirect_url' => $redirect_target,
         ), 200 );
     }
 }

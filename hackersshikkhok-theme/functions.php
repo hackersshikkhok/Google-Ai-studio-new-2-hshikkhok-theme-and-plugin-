@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'HS_THEME_VERSION', '5.0.0' );
+define( 'HS_THEME_VERSION', '5.0.5' );
 define( 'HS_THEME_DIR', get_template_directory() );
 define( 'HS_THEME_URI', get_template_directory_uri() );
 

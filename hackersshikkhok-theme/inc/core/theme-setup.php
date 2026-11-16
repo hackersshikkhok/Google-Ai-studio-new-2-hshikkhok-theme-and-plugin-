@@ -9,6 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Completely hide WordPress Admin Bar on the frontend for a clean app-like experience
+add_filter( 'show_admin_bar', '__return_false', PHP_INT_MAX );
+add_action( 'after_setup_theme', static function (): void {
+    show_admin_bar( false );
+}, 1 );
+add_action( 'init', static function (): void {
+    if ( ! is_admin() ) {
+        show_admin_bar( false );
+    }
+}, 1 );
+add_action( 'get_header', static function (): void {
+    remove_action( 'wp_head', '_admin_bar_bump_cb' );
+} );
+
 // Prevent zlib output compression conflict on shared hosts/cPanel
 add_action( 'init', static function (): void {
     if ( ini_get( 'zlib.output_compression' ) || ( function_exists( 'ob_get_level' ) && ob_get_level() > 0 ) ) {

@@ -58,7 +58,7 @@ final class StoryEngine {
     public static function ajax_upload_story(): void {
         check_ajax_referer( 'hs_ajax_nonce', 'nonce' );
         if ( ! is_user_logged_in() ) {
-            wp_send_json_error( array( 'message' => 'অনুমতি নেই! দয়া করে লগইন করুন।' ) );
+            wp_send_json_error( array( 'message' => 'Unauthorized! Please log in to continue.' ) );
         }
 
         $user_id    = get_current_user_id();
@@ -78,14 +78,14 @@ final class StoryEngine {
             if ( ! is_wp_error( $attachment_id ) ) {
                 $media_url = (string) wp_get_attachment_url( $attachment_id );
             } else {
-                wp_send_json_error( array( 'message' => 'ফাইল আপলোড ব্যর্থ হয়েছে: ' . $attachment_id->get_error_message() ) );
+                wp_send_json_error( array( 'message' => 'File upload failed: ' . $attachment_id->get_error_message() ) );
             }
         } elseif ( ! empty( $_POST['media_url'] ) ) {
             $media_url = esc_url_raw( (string) $_POST['media_url'] );
         }
 
         if ( 'text' === $media_type && empty( $caption ) ) {
-            wp_send_json_error( array( 'message' => 'টেক্সট স্টোরির জন্য কিছু লিখুন!' ) );
+            wp_send_json_error( array( 'message' => 'Please enter some text for your story!' ) );
         }
 
         $all_stories = get_option( self::OPTION_KEY, array() );
@@ -118,7 +118,7 @@ final class StoryEngine {
         }
 
         wp_send_json_success( array(
-            'message' => '🚀 আপনার স্টোরি সফলভাবে পাবলিশ হয়েছে! (+৫ XP অর্জিত)',
+            'message' => '🚀 Story published successfully! (+5 XP earned)',
             'story'   => $new_story,
         ) );
     }

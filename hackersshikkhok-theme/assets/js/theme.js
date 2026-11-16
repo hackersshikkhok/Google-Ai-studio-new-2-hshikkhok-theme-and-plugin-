@@ -168,155 +168,31 @@
 
   function initAuthModal() {
     const backdrop = document.getElementById('hs-auth-modal-backdrop');
-    const closeBtn = document.getElementById('hs-auth-modal-close');
-    const tabs = document.querySelectorAll('.hs-auth-tab');
-    const loginForm = document.getElementById('hs-login-form');
-    const regForm = document.getElementById('hs-register-form');
-    const guestTab = document.getElementById('hs-guest-tab');
-    const alertBox = document.getElementById('hs-auth-alert');
-    const regSubmitBtn = document.getElementById('hs-reg-submit');
-    const guestBtn = document.getElementById('hs-guest-activate-btn');
-
     if (!backdrop) return;
 
-    function openModal(action) {
-      backdrop.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-      switchTab(action || 'login');
-    }
-
-    function closeModal() {
-      backdrop.style.display = 'none';
-      document.body.style.overflow = '';
-      if (alertBox) alertBox.style.display = 'none';
-    }
-
-    function showAlert(msg, isError) {
-      if (!alertBox) return;
-      alertBox.textContent = msg;
-      alertBox.style.display = 'block';
-      alertBox.style.background = isError ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)';
-      alertBox.style.color = isError ? '#f87171' : '#10b981';
-      alertBox.style.border = '1px solid ' + (isError ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)');
-    }
-
-    function switchTab(tabKey) {
-      tabs.forEach(function (t) {
-        if (t.getAttribute('data-tab') === tabKey) {
-          t.style.borderBottom = '2px solid #00f5d4';
-          t.style.color = '#00f5d4';
-        } else {
-          t.style.borderBottom = '2px solid transparent';
-          t.style.color = '#94a3b8';
-        }
-      });
-
-      if (loginForm) loginForm.style.display = tabKey === 'login' ? 'block' : 'none';
-      if (regForm) regForm.style.display = tabKey === 'register' ? 'block' : 'none';
-      if (guestTab) guestTab.style.display = tabKey === 'guest' ? 'block' : 'none';
-      if (alertBox) alertBox.style.display = 'none';
-    }
-
-    // Attach to all auth trigger buttons across page
+    // Attach to all .hs-auth-trigger buttons (e.g., mobile nav or inline links)
     document.querySelectorAll('.hs-auth-trigger').forEach(function (btn) {
+      if (btn.getAttribute('onclick')) return; // Avoid double trigger when inline handler exists
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         const action = btn.getAttribute('data-auth-action') || 'login';
-        openModal(action);
+        if (typeof window.openHsAuthModal === 'function') {
+          window.openHsAuthModal(action);
+        }
       });
     });
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeModal);
-    }
 
     backdrop.addEventListener('click', function (e) {
-      if (e.target === backdrop) closeModal();
-    });
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        switchTab(tab.getAttribute('data-tab'));
-      });
+      if (e.target === backdrop && typeof window.closeHsAuthModal === 'function') {
+        window.closeHsAuthModal();
+      }
     });
 
     // Check URL query param ?auth=login or ?auth=register
     const urlParams = new URLSearchParams(window.location.search);
     const authParam = urlParams.get('auth');
-    if (authParam === 'login' || authParam === 'register') {
-      openModal(authParam);
-    }
-
-    // Register AJAX submission
-    if (regSubmitBtn) {
-      regSubmitBtn.addEventListener('click', function () {
-        const u = (document.getElementById('hs-reg-user') || {}).value || '';
-        const em = (document.getElementById('hs-reg-email') || {}).value || '';
-        const p = (document.getElementById('hs-reg-pass') || {}).value || '';
-
-        if (!u || !em || !p) {
-          showAlert('Please fill in username, email, and password.', true);
-          return;
-        }
-
-        regSubmitBtn.disabled = true;
-        regSubmitBtn.textContent = 'Creating Operative Account...';
-
-        const apiEndpoint = (window.hsThemeConfig && window.hsThemeConfig.apiRoot)
-          ? window.hsThemeConfig.apiRoot + 'auth/register'
-          : '/wp-json/hackersshikkhok/v1/auth/register';
-
-        fetch(apiEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': (window.hsThemeConfig && window.hsThemeConfig.nonce) || ''
-          },
-          body: JSON.stringify({ username: u, email: em, password: p })
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (data.success) {
-            showAlert('✓ Account created! Redirecting to operative vault...', false);
-            localStorage.setItem('hs_user_name', u);
-            localStorage.setItem('hs_user_bdt', '50.00');
-            localStorage.setItem('hs_user_xp', '200');
-            setTimeout(function () {
-              window.location.href = data.redirect_url || '/dashboard/';
-            }, 1200);
-          } else {
-            showAlert(data.message || 'Registration failed. Please try a different username.', true);
-            regSubmitBtn.disabled = false;
-            regSubmitBtn.textContent = 'Create Free Operative Account ➔';
-          }
-        })
-        .catch(function () {
-          // Client graceful fallback
-          localStorage.setItem('hs_user_name', u);
-          localStorage.setItem('hs_user_bdt', '50.00');
-          localStorage.setItem('hs_user_xp', '200');
-          showAlert('✓ Operative profile created locally. Welcome!', false);
-          setTimeout(function () {
-            window.location.href = '/dashboard/';
-          }, 1000);
-        });
-      });
-    }
-
-    // Guest Operative Demo Activation
-    if (guestBtn) {
-      guestBtn.addEventListener('click', function () {
-        localStorage.setItem('hs_user_name', 'Guest Operative');
-        localStorage.setItem('hs_user_bdt', '50.00');
-        localStorage.setItem('hs_user_xp', '200');
-        showAlert('✓ Guest operative session activated with ৳50.00 BDT!', false);
-        const headerBdt = document.getElementById('hs-header-bdt');
-        if (headerBdt) headerBdt.textContent = 'BDT 50.00';
-        setTimeout(function () {
-          closeModal();
-          window.location.href = '/dashboard/';
-        }, 800);
-      });
+    if ((authParam === 'login' || authParam === 'register') && typeof window.openHsAuthModal === 'function') {
+      window.openHsAuthModal(authParam);
     }
   }
 
@@ -359,43 +235,14 @@
       langButtons.forEach(function (btn) {
         const bl = btn.getAttribute('data-lang');
         if (bl === lang) {
-          btn.style.color = '#00f5d4';
-          btn.style.fontWeight = '800';
-          btn.style.background = 'rgba(0, 245, 212, 0.2)';
+          btn.classList.add('is-active');
         } else {
-          btn.style.color = '#94a3b8';
-          btn.style.fontWeight = '500';
-          btn.style.background = 'transparent';
+          btn.classList.remove('is-active');
         }
       });
 
-      // Invoke i18n engine if loaded
       if (window.HS_I18N && typeof window.HS_I18N.setLanguage === 'function') {
         window.HS_I18N.setLanguage(lang);
-      }
-
-      // If switching to Bangla or Hindi, set google translate cookie & trigger translation
-      if (lang === 'bn' || lang === 'hi' || lang === 'es' || lang === 'ar') {
-        document.cookie = 'googtrans=/en/' + lang + ';path=/;domain=' + window.location.hostname;
-        document.cookie = 'googtrans=/en/' + lang + ';path=/';
-        
-        // Load Google Translate script dynamically if not yet present
-        if (!document.getElementById('google-translate-script')) {
-          const s = document.createElement('script');
-          s.id = 'google-translate-script';
-          s.src = '//translate.google.com/translate_a/element.js?cb=hsGoogleTranslateInit';
-          document.head.appendChild(s);
-          window.hsGoogleTranslateInit = function () {
-            new window.google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: 'bn,hi,ar,es,en',
-              autoDisplay: false
-            }, 'google_translate_element');
-          };
-        }
-      } else if (lang === 'en') {
-        document.cookie = 'googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-        document.cookie = 'googtrans=;path=/;domain=' + window.location.hostname + ';expires=Thu, 01 Jan 1970 00:00:00 UTC;';
       }
     }
 
@@ -407,9 +254,6 @@
         const target = btn.getAttribute('data-lang');
         if (target) {
           setLanguage(target);
-          setTimeout(function () {
-            window.location.reload();
-          }, 350);
         }
       });
     });
@@ -428,24 +272,38 @@
   });
 
   function initLikeHandler() {
-    document.querySelectorAll('.hs-like-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
+    var ajaxUrl = (typeof window.hsThemeData !== 'undefined' && window.hsThemeData.ajax_url) ? window.hsThemeData.ajax_url : '/wp-admin/admin-ajax.php';
+    var nonce = (typeof window.hsThemeData !== 'undefined' && window.hsThemeData.ajax_nonce) ? window.hsThemeData.ajax_nonce : '';
+
+    document.querySelectorAll('.hs-like-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
         e.preventDefault();
-        const postId = this.dataset.postId;
-        const formData = new FormData();
+        var postId = this.dataset.postId;
+        if (!postId) return;
+        var formData = new FormData();
         formData.append('action', 'hs_like_post');
         formData.append('post_id', postId);
-        
-        fetch(hsThemeData.ajax_url, {
+        formData.append('nonce', nonce);
+
+        fetch(ajaxUrl, {
           method: 'POST',
           body: formData
         })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                this.querySelector('.hs-likes-count').textContent = data.data.likes;
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.success && data.data) {
+            var countEl = btn.querySelector('.hs-likes-count');
+            if (countEl) countEl.textContent = data.data.likes;
+            if (typeof data.data.is_liked !== 'undefined') {
+              btn.classList.toggle('is-liked', data.data.is_liked);
+            } else {
+              btn.classList.add('is-liked');
             }
-        });
+            var statEl = document.getElementById('hs-likes-stat');
+            if (statEl) statEl.textContent = data.data.likes;
+          }
+        })
+        .catch(function () {});
       });
     });
   }

@@ -16,7 +16,7 @@ get_header();
 global $post;
 $post_id       = get_the_ID();
 $device_name   = get_post_meta( $post_id, '_hs_price_device_name', true ) ?: get_the_title();
-$price_bdt     = get_post_meta( $post_id, '_hs_price_bdt', true ) ?: '৳42,999';
+$price_bdt     = get_post_meta( $post_id, '_hs_price_bdt', true ) ?: 'BDT 42,999';
 $price_type    = get_post_meta( $post_id, '_hs_price_type', true ) ?: 'Official';
 $variants_json = get_post_meta( $post_id, '_hs_price_variants_json', true );
 $availability  = get_post_meta( $post_id, '_hs_price_availability', true ) ?: 'Available in Bangladesh';
@@ -159,14 +159,14 @@ $brand_name = ( ! empty( $brands ) && ! is_wp_error( $brands ) ) ? $brands[0]->n
         <!-- Main Editorial Content & Price Assessment -->
         <article class="entry-content hs-price-content" style="background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:36px; margin-bottom:32px; color:#e2e8f0; font-size:16px; line-height:1.8;">
             <h3 style="color:#00f5d4; font-size:1.4rem; font-weight:800; margin-top:0;">
-                <?php echo esc_html( $device_name ); ?> বাংলাদেশে দাম ও মার্কেট পর্যালোচনা
+                <?php echo esc_html( $device_name ); ?> Price &amp; Market Analysis in Bangladesh
             </h3>
             <?php the_content(); ?>
 
             <div style="margin-top:28px; background:#070a14; border-left:4px solid #10b981; padding:18px 20px; border-radius:8px;">
-                <strong style="color:#10b981; font-size:14px;">🔍 দাম যাচাই সংক্রান্ত তথ্য ও সতর্কতা (Price Verification Policy):</strong>
+                <strong style="color:#10b981; font-size:14px;">🔍 Price Verification Policy:</strong>
                 <p style="color:#94a3b8; font-size:13px; margin:6px 0 0; line-height:1.6;">
-                    HackersShikkhok টিম নিয়মিত অনুমোদিত শো-রুম, ব্র্যান্ড শপ এবং বিশ্বস্ত রিটেইলারদের কাছ থেকে দাম যাচাই করে থাকে। ভ্যাট, ট্যাক্স বা রিটেইলার ক্যাশব্যাক অফারের কারণে এলাকাভেদে দামে সামান্য তারতম্য হতে পারে।
+                    The HackersShikkhok team regularly verifies retail pricing across authorized showrooms, official brand stores, and trusted retailers. Regional prices may vary slightly depending on VAT, taxes, or retailer cashback promotions.
                 </p>
             </div>
         </article>

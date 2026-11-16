@@ -41,7 +41,7 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                 Website to Mobile App &amp; Digital Studio Hub
             </h1>
             <p style="color:#94a3b8; font-size:14px; max-width:760px; margin:0 auto 20px; line-height:1.6;">
-                যেকোনো ওয়েবসাইটকে অ্যান্ড্রয়েড APK বা PWA অ্যাপে রূপান্তর করুন, সাইবার গ্রিটিংস ও সার্টিফিকেট তৈরি করুন, ৩ডি গিফট বক্স ডিজাইন করুন অথবা ব্রাউজার গেম তৈরি করুন।
+                Convert any website into an Android APK or installable PWA, design cryptographic certificates, build 3D mystery boxes, or launch interactive HTML5 cipher games.
             </p>
 
             <!-- Studio Navigation Tabs Bar -->
@@ -87,13 +87,13 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
 
                     <div style="display:flex; flex-direction:column; gap:16px;">
                         <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">অ্যান্ড্রয়েড অ্যাপের নাম (App Name):</label>
+                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Android App Name:</label>
                             <input type="text" id="hs-app-name" value="HackersShikkhok App" placeholder="My Android App" 
                                    style="width:100%; box-sizing:border-box; background:#06080d; border:1px solid rgba(0,245,212,0.3); color:#fff; padding:12px 14px; border-radius:8px; font-size:14px;" />
                         </div>
 
                         <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">ওয়েবসাইট বা টার্গেট URL (Web URL to Wrap):</label>
+                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Target Web URL to Wrap:</label>
                             <input type="url" id="hs-app-url" value="https://hackersshikkhok.com" placeholder="https://example.com" 
                                    style="width:100%; box-sizing:border-box; background:#06080d; border:1px solid rgba(255,255,255,0.15); color:#00f5d4; font-family:var(--font-mono); padding:12px 14px; border-radius:8px; font-size:14px;" />
                         </div>
@@ -112,7 +112,7 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                         </div>
 
                         <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:8px;">অ্যান্ড্রয়েড পারমিশন ও ফিচারসমূহ:</label>
+                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:8px;">Android Permissions &amp; Features:</label>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px; color:#cbd5e1;">
                                 <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" checked /> INTERNET Access</label>
                                 <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" checked /> ACCESS_NETWORK_STATE</label>
@@ -193,7 +193,7 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                             <span style="color:#a78bfa;">🌐</span> Progressive Web App (PWA) Manifest &amp; Service Worker Generator
                         </h2>
                         <p style="color:#94a3b8; font-size:13px; margin:0;">
-                            যেকোনো ওয়েবসাইটের জন্য ১-ক্লিকে PWA তৈরি করুন যা মোবাইল ও ডেস্কটপে ইনস্টল করা যায় এবং অফলাইনেও কাজ করে।
+                            Generate a 1-click installable PWA for mobile and desktop devices with offline Service Worker support.
                         </p>
                     </div>
                     <span style="background:rgba(167,139,250,0.15); color:#a78bfa; font-size:11px; font-weight:800; padding:4px 12px; border-radius:6px;">
@@ -244,7 +244,7 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                     <span style="color:#f43f5e;">🎴</span> Cyber Certificate &amp; Achievement Card Maker
                 </h2>
                 <p style="color:#94a3b8; font-size:13px; margin:0 0 24px;">
-                    শিক্ষার্থীদের জন্য ভেক্টর ক্রিপ্টোগ্রাফিক সার্টিফিকেট ও সোশ্যাল শেয়ারিং কার্ড তৈরি করুন।
+                    Design vector cryptographic certificates and shareable achievement cards for academy graduates.
                 </p>
 
                 <!-- Vector Certificate Canvas Preview -->
@@ -283,9 +283,9 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                 <span style="font-size:54px; display:inline-block; animation:bounce 2s infinite;">🎁</span>
                 <h2 style="color:#ffffff; font-size:1.5rem; font-weight:900; margin:14px 0 6px;">3D Interactive Gift Box &amp; CTF Mystery Unit</h2>
                 <p style="color:#94a3b8; font-size:14px; max-width:600px; margin:0 auto 24px;">
-                    ক্লিক করলেই খুলে যাবে স্পেশাল গিফট বক্স এবং পার্টিকেল অ্যানিমেশন সহ আনলক হবে গোপন ফ্ল্যাগ।
+                    Open the mystery unit to trigger particle effects and reveal the hidden CTF reward flag.
                 </p>
-                <button type="button" onclick="alert('🎉 অভিনন্দন! আপনি আনলক করেছেন: FLAG{hs_cyber_gift_bdt_reward_2026}');" style="background:#f59e0b; color:#050811; border:none; padding:14px 32px; font-weight:900; font-size:15px; border-radius:10px; cursor:pointer; box-shadow:0 0 25px rgba(245,158,11,0.4);">
+                <button type="button" onclick="this.textContent='🎉 Unlocked: FLAG{hs_cyber_gift_bdt_reward_2026}';" style="background:#f59e0b; color:#050811; border:none; padding:14px 32px; font-weight:900; font-size:15px; border-radius:10px; cursor:pointer; box-shadow:0 0 25px rgba(245,158,11,0.4);">
                     🎁 Open Mystery Box
                 </button>
             </div>
@@ -298,12 +298,12 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                     <span style="color:#10b981;">🕹️</span> Terminal Cipher Breaker &amp; Cyber Canvas Game
                 </h2>
                 <p style="color:#94a3b8; font-size:13px; margin:0 0 20px;">
-                    ব্রাউজারের ক্যানভাসে সরাসরি খেলুন সাইবার মেমোরি ও সাইফার ব্রেকিং চ্যালেঞ্জ।
+                    Play interactive browser-based cyber memory and hex cipher breaking challenges.
                 </p>
                 <div style="background:#000; border:2px solid #10b981; border-radius:14px; max-width:600px; height:240px; margin:0 auto 20px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#10b981; font-family:var(--font-mono); font-size:14px;">
                     <div>[CYBER_TERMINAL_ONLINE]</div>
                     <div style="margin:10px 0;">Solve: 0x48 + 0x53 = ?</div>
-                    <button type="button" onclick="alert('CORRECT! +50 XP and +৳2.00 BDT awarded!');" style="background:#10b981; color:#050811; border:none; padding:8px 18px; border-radius:6px; font-weight:800; cursor:pointer;">
+                    <button type="button" onclick="this.textContent='✓ CORRECT! +50 XP & +BDT 2.00 awarded!';" style="background:#10b981; color:#050811; border:none; padding:8px 18px; border-radius:6px; font-weight:800; cursor:pointer;">
                         Submit Answer: 0x9B
                     </button>
                 </div>
@@ -366,7 +366,7 @@ if ( ! in_array( $active_studio, array( 'web-to-app', 'pwa', 'card-maker', 'gift
                     alertBox.style.background = 'rgba(16,185,129,0.15)';
                     alertBox.style.border = '1px solid #10b981';
                     alertBox.style.color = '#10b981';
-                    alertBox.textContent = '✓ অ্যান্ড্রয়েড স্টুডিও প্রজেক্ট সোর্স কোড ও APK প্যাকেজ সফলভাবে তৈরি হয়েছে!';
+                    alertBox.textContent = '✓ Android Studio project source and APK package generated successfully!';
                 }
             }
         }, 400);

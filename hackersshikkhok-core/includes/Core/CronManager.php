@@ -24,13 +24,22 @@ final class CronManager {
     }
 
     public static function schedule_events(): void {
+        $autopilot_active = (bool) get_option( 'hs_enable_ai_autopilot', false ) && ! (bool) get_option( 'hs_emergency_kill_switch', false );
+
+        if ( ! $autopilot_active ) {
+            wp_clear_scheduled_hook( self::CRON_AUTOPILOT_TICK );
+            wp_clear_scheduled_hook( self::CRON_AUTOPILOT_BATCH );
+        }
+
         $schedules = array(
-            self::CRON_AUTOPILOT_TICK  => 'hourly',
-            self::CRON_AUTOPILOT_BATCH => 'hourly',
             self::CRON_CVE_INGESTION   => 'daily',
             self::CRON_SECURITY_SCANS  => 'hourly',
             self::CRON_LOG_RETENTION   => 'daily',
         );
+
+        if ( $autopilot_active ) {
+            $schedules[ self::CRON_AUTOPILOT_TICK ] = 'daily';
+        }
 
         foreach ( $schedules as $hook => $recurrence ) {
             if ( ! wp_next_scheduled( $hook ) ) {
@@ -40,6 +49,10 @@ final class CronManager {
     }
 
     public static function ensure_scheduled_events(): void {
+        if ( ! (bool) get_option( 'hs_enable_ai_autopilot', false ) || (bool) get_option( 'hs_emergency_kill_switch', false ) ) {
+            wp_clear_scheduled_hook( self::CRON_AUTOPILOT_TICK );
+            wp_clear_scheduled_hook( self::CRON_AUTOPILOT_BATCH );
+        }
         // Fast check only during cron or admin requests to avoid frontend overhead.
         if ( ! wp_doing_cron() && ! is_admin() ) {
             return;
